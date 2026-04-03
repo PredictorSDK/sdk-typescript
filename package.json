@@ -1,0 +1,42 @@
+{
+  "name": "@predictorsdk/client",
+  "version": "0.0.0",
+  "description": "The official TypeScript/JavaScript client for the PredictorSDK matching markets API",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepack": "npm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PredictorSDK/sdk-typescript.git"
+  },
+  "homepage": "https://docs.predictorsdk.com",
+  "bugs": {
+    "url": "https://github.com/PredictorSDK/sdk-typescript/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
