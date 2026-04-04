@@ -23,7 +23,6 @@ jobs:
   release:
     if: github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'release: sync generated SDK v')
     runs-on: ubuntu-latest
-    environment: release
     steps:
       - name: Checkout
         uses: actions/checkout@v6
