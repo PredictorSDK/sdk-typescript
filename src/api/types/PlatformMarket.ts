@@ -12,7 +12,7 @@ export interface PlatformMarket {
     token_ids?: string[] | undefined;
     /** Source market ID. Present for platforms other than Kalshi and Polymarket. */
     market_id?: string | undefined;
-    /** Source outcome IDs. Present for platforms other than Kalshi and Polymarket. */
+    /** Source outcome IDs. Present for platforms that use outcome IDs. */
     outcome_ids?: string[] | undefined;
 }
 
