@@ -21,6 +21,7 @@ concurrency:
 
 jobs:
   release:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'release: sync generated SDK v')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -47,13 +48,34 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
+          git fetch --tags --force
           if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
             echo "::error::Version must be semver (for example 0.1.0)"
             exit 1
           fi
+
+      - name: Check existing npm package
+        id: npm
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          if npm view "@predictorsdk/client@$VERSION" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check existing git tag
+        id: tag
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
           if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
-            echo "::error::Tag v$VERSION already exists"
-            exit 1
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Install dependencies
@@ -66,6 +88,7 @@ jobs:
         run: npm pack --dry-run
 
       - name: Publish to npm
+        if: steps.npm.outputs.published != 'true'
         env:
           VERSION: ${{ steps.version.outputs.version }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -75,6 +98,7 @@ jobs:
           npm publish
 
       - name: Push commit and tag
+        if: steps.tag.outputs.exists != 'true'
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
