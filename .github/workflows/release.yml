@@ -6,6 +6,9 @@ on:
       version:
         description: "Version to release (for example 0.1.0)."
         required: true
+  repository_dispatch:
+    types:
+      - release-sdk
 
 permissions:
   contents: write
@@ -19,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TARGET_BRANCH: ${{ github.ref_name }}
-      VERSION: ${{ github.event.inputs.version }}
+      VERSION: ${{ github.event.inputs.version || github.event.client_payload.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
