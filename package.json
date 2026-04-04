@@ -1,6 +1,6 @@
 {
   "name": "@predictorsdk/client",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The official TypeScript/JavaScript client for the PredictorSDK matching markets API",
   "license": "MIT",
   "type": "module",
