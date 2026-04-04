@@ -10,7 +10,7 @@ on:
       - package-lock.json
       - tsconfig.json
       - src/**
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 permissions:
   contents: write
