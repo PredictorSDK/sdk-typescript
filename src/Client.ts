@@ -8,6 +8,7 @@ import * as core from "./core/index.js";
 import * as environments from "./environments.js";
 import { handleNonStatusCodeError } from "./errors/handleNonStatusCodeError.js";
 import * as errors from "./errors/index.js";
+import * as serializers from "./serialization/index.js";
 
 export declare namespace PredictorSDKClient {
     export type Options = BaseClientOptions;
@@ -48,12 +49,7 @@ export class PredictorSDKClient {
         request: PredictorSDK.GetSportsMatchingMarketsRequest = {},
         requestOptions?: PredictorSDKClient.RequestOptions,
     ): Promise<core.WithRawResponse<PredictorSDK.SportsMatchingResponse>> {
-        const {
-            kalshi_event_ticker: kalshiEventTicker,
-            polymarket_market_slug: polymarketMarketSlug,
-            predict_market_id: predictMarketId,
-            sxbet_market_id: sxbetMarketId,
-        } = request;
+        const { kalshiEventTicker, polymarketMarketSlug, predictMarketId, sxbetMarketId } = request;
         const _queryParams: Record<string, unknown> = {
             kalshi_event_ticker: kalshiEventTicker,
             polymarket_market_slug: polymarketMarketSlug,
@@ -83,34 +79,73 @@ export class PredictorSDKClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as PredictorSDK.SportsMatchingResponse, rawResponse: _response.rawResponse };
+            return {
+                data: serializers.SportsMatchingResponse.parseOrThrow(_response.body, {
+                    unrecognizedObjectKeys: "passthrough",
+                    allowUnrecognizedUnionMembers: true,
+                    allowUnrecognizedEnumValues: true,
+                    skipValidation: true,
+                    breadcrumbsPrefix: ["response"],
+                }),
+                rawResponse: _response.rawResponse,
+            };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new PredictorSDK.BadRequestError(
-                        _response.error.body as PredictorSDK.ErrorResponse,
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
                         _response.rawResponse,
                     );
                 case 401:
                     throw new PredictorSDK.UnauthorizedError(
-                        _response.error.body as PredictorSDK.ErrorResponse,
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
                         _response.rawResponse,
                     );
                 case 403:
                     throw new PredictorSDK.ForbiddenError(
-                        _response.error.body as PredictorSDK.ErrorResponse,
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
                         _response.rawResponse,
                     );
                 case 429:
                     throw new PredictorSDK.TooManyRequestsError(
-                        _response.error.body as PredictorSDK.ErrorResponse,
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
                         _response.rawResponse,
                     );
                 case 503:
                     throw new PredictorSDK.ServiceUnavailableError(
-                        _response.error.body as PredictorSDK.ErrorResponse,
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
                         _response.rawResponse,
                     );
                 default:

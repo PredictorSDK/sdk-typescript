@@ -1,8 +1,17 @@
 {
   "name": "@predictorsdk/client",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The official TypeScript/JavaScript client for the PredictorSDK matching markets API",
   "license": "MIT",
+  "keywords": [
+    "predictorsdk",
+    "sports",
+    "betting",
+    "prediction-markets",
+    "kalshi",
+    "polymarket",
+    "sdk"
+  ],
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,8 +27,10 @@
       "default": "./dist/index.js"
     }
   },
+  "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "repository": {
     "type": "git",

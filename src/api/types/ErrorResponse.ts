@@ -2,5 +2,5 @@
 
 export interface ErrorResponse {
     error: string;
-    status_code: number;
+    statusCode: number;
 }

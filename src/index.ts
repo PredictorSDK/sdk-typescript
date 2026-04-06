@@ -4,3 +4,4 @@ export { PredictorSDKClient } from "./Client.js";
 export { PredictorSDKEnvironment } from "./environments.js";
 export { PredictorSDKError, PredictorSDKTimeoutError } from "./errors/index.js";
 export * from "./exports.js";
+export * as serialization from "./serialization/index.js";

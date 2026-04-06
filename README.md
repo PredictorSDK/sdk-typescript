@@ -16,7 +16,7 @@ import { PredictorSDKClient } from "@predictorsdk/client";
 const client = new PredictorSDKClient({ token: "your-api-key" });
 
 const { markets } = await client.getSportsMatchingMarkets({
-  kalshi_event_ticker: "KXMLB-25-NYM-COL-2025-04-03",
+  kalshiEventTicker: "KXMLB-25-NYM-COL-2025-04-03",
 });
 ```
 
