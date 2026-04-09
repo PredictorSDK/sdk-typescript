@@ -7,12 +7,14 @@ import type * as serializers from "../index.js";
 export const ErrorResponse: core.serialization.ObjectSchema<serializers.ErrorResponse.Raw, PredictorSDK.ErrorResponse> =
     core.serialization.object({
         error: core.serialization.string(),
+        message: core.serialization.string().optional(),
         statusCode: core.serialization.property("status_code", core.serialization.number()),
     });
 
 export declare namespace ErrorResponse {
     export interface Raw {
         error: string;
+        message?: string | null;
         status_code: number;
     }
 }

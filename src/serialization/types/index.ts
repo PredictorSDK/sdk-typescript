@@ -1,3 +1,5 @@
+export * from "./CryptoPriceItem.js";
+export * from "./CryptoPricesResponse.js";
 export * from "./ErrorResponse.js";
 export * from "./PlatformMarket.js";
 export * from "./PlatformMarketPlatform.js";

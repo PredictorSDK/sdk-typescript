@@ -2,5 +2,7 @@
 
 export interface ErrorResponse {
     error: string;
+    /** Additional detail about the error. May be present, including on some validation errors. */
+    message?: string;
     statusCode: number;
 }
