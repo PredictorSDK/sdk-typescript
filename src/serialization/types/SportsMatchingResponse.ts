@@ -3,6 +3,7 @@
 import type * as PredictorSDK from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
+import { PaginationBlock } from "./PaginationBlock.js";
 import { PlatformMarket } from "./PlatformMarket.js";
 
 export const SportsMatchingResponse: core.serialization.ObjectSchema<
@@ -10,10 +11,12 @@ export const SportsMatchingResponse: core.serialization.ObjectSchema<
     PredictorSDK.SportsMatchingResponse
 > = core.serialization.object({
     markets: core.serialization.record(core.serialization.string(), core.serialization.list(PlatformMarket)),
+    pagination: PaginationBlock.optional(),
 });
 
 export declare namespace SportsMatchingResponse {
     export interface Raw {
         markets: Record<string, PlatformMarket.Raw[]>;
+        pagination?: PaginationBlock.Raw | null;
     }
 }

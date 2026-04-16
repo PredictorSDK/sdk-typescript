@@ -5,12 +5,18 @@
  *     {}
  */
 export interface GetSportsMatchingMarketsRequest {
-    /** Kalshi event ticker(s) to find matching markets for (e.g. `KXNFLGAME-25AUG16ARIDEN`). Provide the parameter multiple times for multiple tickers. Only one filter type may be used per request. */
+    /** Maximum number of matched events to return per page. Range 1–100, default 25. Ignored when a platform-ID filter is supplied. */
+    limit?: number;
+    /** Opaque cursor from a previous response's `pagination.nextCursor` in the SDKs (raw JSON: `pagination.next_cursor`). Must be used with the same filter set — a cursor from `include_settled=true` cannot be replayed against `include_settled=false` and will return `400`. */
+    cursor?: string;
+    /** When `true`, include settled/archived events alongside currently live matches. Defaults to `false`. */
+    includeSettled?: boolean;
+    /** Kalshi event ticker(s) to find matching markets for (e.g. `KXNFLGAME-25AUG16ARIDEN`). Provide the parameter multiple times for multiple tickers. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
     kalshiEventTicker?: string | string[];
-    /** Polymarket market slug(s) to find matching markets for (e.g. `nfl-ari-den-2025-08-16`). Provide the parameter multiple times for multiple slugs. Only one filter type may be used per request. */
+    /** Polymarket market slug(s) to find matching markets for (e.g. `nfl-ari-den-2025-08-16`). Provide the parameter multiple times for multiple slugs. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
     polymarketMarketSlug?: string | string[];
-    /** Predict market ID(s) to find matching markets for (e.g. `110629`). Provide the parameter multiple times for multiple IDs. Only one filter type may be used per request. */
+    /** Predict market ID(s) to find matching markets for (e.g. `110629`). Provide the parameter multiple times for multiple IDs. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
     predictMarketId?: string | string[];
-    /** SX Bet market ID(s) to find matching markets for (e.g. `0x4c000abdbf197ef32ecdf15561b1d636f1e5b02629f466678757fd83e2ec3599`). Provide the parameter multiple times for multiple IDs. Only one filter type may be used per request. */
+    /** SX Bet market ID(s) to find matching markets for (e.g. `0x4c000abdbf197ef32ecdf15561b1d636f1e5b02629f466678757fd83e2ec3599`). Provide the parameter multiple times for multiple IDs. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
     sxbetMarketId?: string | string[];
 }

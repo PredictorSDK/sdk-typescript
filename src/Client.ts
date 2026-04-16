@@ -24,7 +24,7 @@ export class PredictorSDKClient {
     }
 
     /**
-     * Find cross-platform market matches for sports events. Provide a Kalshi event ticker or Polymarket market slug to look up the equivalent market on other platforms. When called without parameters, returns all currently matched sports markets.
+     * Find cross-platform market matches for sports events. When called without parameters, returns all currently matched sports markets with cursor-based pagination (default `limit=25`, max `100`). Provide a Kalshi event ticker, Polymarket slug, Predict market ID, or SX Bet market ID to look up a specific event — lookups return the full match immediately and skip pagination.
      *
      * @param {PredictorSDK.GetSportsMatchingMarketsRequest} request
      * @param {PredictorSDKClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -49,8 +49,19 @@ export class PredictorSDKClient {
         request: PredictorSDK.GetSportsMatchingMarketsRequest = {},
         requestOptions?: PredictorSDKClient.RequestOptions,
     ): Promise<core.WithRawResponse<PredictorSDK.SportsMatchingResponse>> {
-        const { kalshiEventTicker, polymarketMarketSlug, predictMarketId, sxbetMarketId } = request;
+        const {
+            limit,
+            cursor,
+            includeSettled,
+            kalshiEventTicker,
+            polymarketMarketSlug,
+            predictMarketId,
+            sxbetMarketId,
+        } = request;
         const _queryParams: Record<string, unknown> = {
+            limit,
+            cursor,
+            include_settled: includeSettled,
             kalshi_event_ticker: kalshiEventTicker,
             polymarket_market_slug: polymarketMarketSlug,
             predict_market_id: predictMarketId,
@@ -158,6 +169,153 @@ export class PredictorSDKClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/matching-markets/sports");
+    }
+
+    /**
+     * Returns a paginated list of unified markets from all supported prediction market providers. Uses cursor-based pagination with default `limit=25`, max `100`.
+     *
+     * @param {PredictorSDK.GetMarketsRequest} request
+     * @param {PredictorSDKClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link PredictorSDK.BadRequestError}
+     * @throws {@link PredictorSDK.UnauthorizedError}
+     * @throws {@link PredictorSDK.ForbiddenError}
+     * @throws {@link PredictorSDK.TooManyRequestsError}
+     * @throws {@link PredictorSDK.InternalServerError}
+     * @throws {@link PredictorSDK.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.getMarkets()
+     */
+    public getMarkets(
+        request: PredictorSDK.GetMarketsRequest = {},
+        requestOptions?: PredictorSDKClient.RequestOptions,
+    ): core.HttpResponsePromise<PredictorSDK.MarketsListResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getMarkets(request, requestOptions));
+    }
+
+    private async __getMarkets(
+        request: PredictorSDK.GetMarketsRequest = {},
+        requestOptions?: PredictorSDKClient.RequestOptions,
+    ): Promise<core.WithRawResponse<PredictorSDK.MarketsListResponse>> {
+        const { limit, cursor } = request;
+        const _queryParams: Record<string, unknown> = {
+            limit,
+            cursor,
+        };
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.PredictorSDKEnvironment.Production,
+                "v1/markets",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryParameters: { ..._queryParams, ...requestOptions?.queryParams },
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: serializers.MarketsListResponse.parseOrThrow(_response.body, {
+                    unrecognizedObjectKeys: "passthrough",
+                    allowUnrecognizedUnionMembers: true,
+                    allowUnrecognizedEnumValues: true,
+                    skipValidation: true,
+                    breadcrumbsPrefix: ["response"],
+                }),
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new PredictorSDK.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 401:
+                    throw new PredictorSDK.UnauthorizedError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new PredictorSDK.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new PredictorSDK.TooManyRequestsError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 500:
+                    throw new PredictorSDK.InternalServerError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new PredictorSDK.ServiceUnavailableError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.PredictorSDKError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/markets");
     }
 
     /**
