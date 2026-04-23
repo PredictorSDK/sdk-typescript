@@ -5,6 +5,8 @@ import * as errors from "../../errors/index.js";
 import type * as PredictorSDK from "../index.js";
 
 export class TooManyRequestsError extends errors.PredictorSDKError {
+    declare public readonly body: PredictorSDK.ErrorResponse;
+
     constructor(body: PredictorSDK.ErrorResponse, rawResponse?: core.RawResponse) {
         super({
             message: "TooManyRequestsError",

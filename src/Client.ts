@@ -31,6 +31,7 @@ export class PredictorSDKClient {
      *
      * @throws {@link PredictorSDK.BadRequestError}
      * @throws {@link PredictorSDK.UnauthorizedError}
+     * @throws {@link PredictorSDK.PaymentRequiredError}
      * @throws {@link PredictorSDK.ForbiddenError}
      * @throws {@link PredictorSDK.TooManyRequestsError}
      * @throws {@link PredictorSDK.ServiceUnavailableError}
@@ -126,6 +127,17 @@ export class PredictorSDKClient {
                         }),
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new PredictorSDK.PaymentRequiredError(
+                        serializers.PaymentRequiredErrorBody.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new PredictorSDK.ForbiddenError(
                         serializers.ErrorResponse.parseOrThrow(_response.error.body, {
@@ -179,9 +191,9 @@ export class PredictorSDKClient {
      *
      * @throws {@link PredictorSDK.BadRequestError}
      * @throws {@link PredictorSDK.UnauthorizedError}
+     * @throws {@link PredictorSDK.PaymentRequiredError}
      * @throws {@link PredictorSDK.ForbiddenError}
      * @throws {@link PredictorSDK.TooManyRequestsError}
-     * @throws {@link PredictorSDK.InternalServerError}
      * @throws {@link PredictorSDK.ServiceUnavailableError}
      *
      * @example
@@ -262,6 +274,17 @@ export class PredictorSDKClient {
                         }),
                         _response.rawResponse,
                     );
+                case 402:
+                    throw new PredictorSDK.PaymentRequiredError(
+                        serializers.PaymentRequiredErrorBody.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new PredictorSDK.ForbiddenError(
                         serializers.ErrorResponse.parseOrThrow(_response.error.body, {
@@ -275,17 +298,6 @@ export class PredictorSDKClient {
                     );
                 case 429:
                     throw new PredictorSDK.TooManyRequestsError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 500:
-                    throw new PredictorSDK.InternalServerError(
                         serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
@@ -326,6 +338,7 @@ export class PredictorSDKClient {
      *
      * @throws {@link PredictorSDK.BadRequestError}
      * @throws {@link PredictorSDK.UnauthorizedError}
+     * @throws {@link PredictorSDK.PaymentRequiredError}
      * @throws {@link PredictorSDK.ForbiddenError}
      * @throws {@link PredictorSDK.TooManyRequestsError}
      * @throws {@link PredictorSDK.BadGatewayError}
@@ -406,6 +419,17 @@ export class PredictorSDKClient {
                 case 401:
                     throw new PredictorSDK.UnauthorizedError(
                         serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new PredictorSDK.PaymentRequiredError(
+                        serializers.PaymentRequiredErrorBody.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,

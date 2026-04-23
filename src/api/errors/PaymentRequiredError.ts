@@ -4,11 +4,13 @@ import type * as core from "../../core/index.js";
 import * as errors from "../../errors/index.js";
 import type * as PredictorSDK from "../index.js";
 
-export class InternalServerError extends errors.PredictorSDKError {
-    constructor(body: PredictorSDK.ErrorResponse, rawResponse?: core.RawResponse) {
+export class PaymentRequiredError extends errors.PredictorSDKError {
+    declare public readonly body: PredictorSDK.PaymentRequiredErrorBody;
+
+    constructor(body: PredictorSDK.PaymentRequiredErrorBody, rawResponse?: core.RawResponse) {
         super({
-            message: "InternalServerError",
-            statusCode: 500,
+            message: "PaymentRequiredError",
+            statusCode: 402,
             body: body,
             rawResponse: rawResponse,
         });

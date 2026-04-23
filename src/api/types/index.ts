@@ -3,6 +3,8 @@ export * from "./CryptoPricesResponse.js";
 export * from "./ErrorResponse.js";
 export * from "./MarketsListResponse.js";
 export * from "./PaginationBlock.js";
+export * from "./PaymentRequiredErrorAction.js";
+export * from "./PaymentRequiredErrorBody.js";
 export * from "./PlatformMarket.js";
 export * from "./PlatformMarketPlatform.js";
 export * from "./SportsMatchingResponse.js";
