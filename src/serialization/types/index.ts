@@ -7,6 +7,7 @@ export * from "./PaymentRequiredErrorAction.js";
 export * from "./PaymentRequiredErrorBody.js";
 export * from "./PlatformMarket.js";
 export * from "./PlatformMarketPlatform.js";
+export * from "./PolymarketWalletResponse.js";
 export * from "./SportsMatchingResponse.js";
 export * from "./UnifiedMarket.js";
 export * from "./UnifiedMarketProvider.js";

@@ -507,6 +507,187 @@ export class PredictorSDKClient {
     }
 
     /**
+     * Returns the public profile (image and display name) for a Polymarket wallet. Accepts either a wallet `address` (proxy or signer EOA) or a Polymarket `username`. Exactly one of the two must be supplied — passing both returns `400`.
+     *
+     * When `address` is the underlying signer EOA, the endpoint resolves it to the deterministic proxy address and returns the proxy's profile, with `signer` echoing the input.
+     *
+     * When `username` is supplied, the endpoint resolves it to the wallet via Polymarket's profile search. Match is case-insensitive and exact: a query of `Theo` resolves the user literally named `theo` but does not resolve `theo46` or `Theo47`. A leading `@` is accepted (and stripped) as a convenience for callers used to Twitter-style handles. `signer` is always `null` on the username path. Profiles that don't exist (or only match fuzzily) return `404`.
+     *
+     * @param {PredictorSDK.GetPolymarketWalletRequest} request
+     * @param {PredictorSDKClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link PredictorSDK.BadRequestError}
+     * @throws {@link PredictorSDK.UnauthorizedError}
+     * @throws {@link PredictorSDK.PaymentRequiredError}
+     * @throws {@link PredictorSDK.ForbiddenError}
+     * @throws {@link PredictorSDK.NotFoundError}
+     * @throws {@link PredictorSDK.TooManyRequestsError}
+     * @throws {@link PredictorSDK.BadGatewayError}
+     * @throws {@link PredictorSDK.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.getPolymarketWallet({
+     *         address: "0x7c3db723f1d4d8cb9c550095203b686cb11e5c6b"
+     *     })
+     */
+    public getPolymarketWallet(
+        request: PredictorSDK.GetPolymarketWalletRequest = {},
+        requestOptions?: PredictorSDKClient.RequestOptions,
+    ): core.HttpResponsePromise<PredictorSDK.PolymarketWalletResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getPolymarketWallet(request, requestOptions));
+    }
+
+    private async __getPolymarketWallet(
+        request: PredictorSDK.GetPolymarketWalletRequest = {},
+        requestOptions?: PredictorSDKClient.RequestOptions,
+    ): Promise<core.WithRawResponse<PredictorSDK.PolymarketWalletResponse>> {
+        const { address, username } = request;
+        const _queryParams: Record<string, unknown> = {
+            address,
+            username,
+        };
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.PredictorSDKEnvironment.Production,
+                "v1/polymarket/wallet",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: serializers.PolymarketWalletResponse.parseOrThrow(_response.body, {
+                    unrecognizedObjectKeys: "passthrough",
+                    allowUnrecognizedUnionMembers: true,
+                    allowUnrecognizedEnumValues: true,
+                    skipValidation: true,
+                    breadcrumbsPrefix: ["response"],
+                }),
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new PredictorSDK.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 401:
+                    throw new PredictorSDK.UnauthorizedError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new PredictorSDK.PaymentRequiredError(
+                        serializers.PaymentRequiredErrorBody.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new PredictorSDK.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 404:
+                    throw new PredictorSDK.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new PredictorSDK.TooManyRequestsError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 502:
+                    throw new PredictorSDK.BadGatewayError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new PredictorSDK.ServiceUnavailableError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.PredictorSDKError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/polymarket/wallet");
+    }
+
+    /**
      * Make a passthrough request using the SDK's configured auth, retry, logging, etc.
      * This is useful for making requests to endpoints not yet supported in the SDK.
      * The input can be a URL string, URL object, or Request object. Relative paths are resolved against the configured base URL.
