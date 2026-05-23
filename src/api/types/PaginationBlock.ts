@@ -3,7 +3,7 @@
 export interface PaginationBlock {
     /** Number of items requested per page (echoes the `limit` query param). */
     limit: number;
-    /** Total matching items across all pages. */
+    /** Total matching items across all pages, when known. Set to `0` for endpoints whose upstream does not expose a total count — clients should rely on `has_more` and `next_cursor` to paginate in that case. */
     total: number;
     /** Whether additional pages exist beyond this one. */
     hasMore: boolean;
