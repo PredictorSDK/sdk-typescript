@@ -339,6 +339,190 @@ export class PredictorSDKClient {
     }
 
     /**
+     * Returns a single market across the four supported platforms. The `market_id` is either the composite form returned by `GET /v1/markets` (`{provider}:{native_id}`, e.g. `kalshi:KXMLBGAME-26MAY262005HOUTEX-TEX`) or the platform-native identifier. Composite IDs dispatch unambiguously by prefix. Native IDs are routed by format inference: Kalshi tickers match the all-caps-with-hyphens shape (`KX…-…`); SX Bet hashes match `0x` + 64 hex characters; numeric ids and kebab-case slugs are shared shape between Polymarket and Predict and probe Polymarket first, falling back to Predict on 404. Pass `?platform=` explicitly to skip the probe.
+     *
+     * Response shape is intentionally strict-universal: only fields every platform's single-market endpoint exposes natively without a second fetch. Pricing lives in SX Bet's order book, Predict's market record has no close timestamp (that lives on the parent category), and SX Bet/Predict don't expose volume or liquidity on the market record in any reliable form — those fields are deliberately omitted from v0 to avoid asymmetric nullable shapes. Additions are additive when the underlying coverage improves.
+     *
+     * @param {PredictorSDK.GetMarketRequest} request
+     * @param {PredictorSDKClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link PredictorSDK.BadRequestError}
+     * @throws {@link PredictorSDK.UnauthorizedError}
+     * @throws {@link PredictorSDK.PaymentRequiredError}
+     * @throws {@link PredictorSDK.ForbiddenError}
+     * @throws {@link PredictorSDK.NotFoundError}
+     * @throws {@link PredictorSDK.TooManyRequestsError}
+     * @throws {@link PredictorSDK.BadGatewayError}
+     * @throws {@link PredictorSDK.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.getMarket({
+     *         marketId: "kalshi:KXMLBGAME-26MAY262005HOUTEX-TEX"
+     *     })
+     */
+    public getMarket(
+        request: PredictorSDK.GetMarketRequest,
+        requestOptions?: PredictorSDKClient.RequestOptions,
+    ): core.HttpResponsePromise<PredictorSDK.MarketDetailResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getMarket(request, requestOptions));
+    }
+
+    private async __getMarket(
+        request: PredictorSDK.GetMarketRequest,
+        requestOptions?: PredictorSDKClient.RequestOptions,
+    ): Promise<core.WithRawResponse<PredictorSDK.MarketDetailResponse>> {
+        const { marketId, platform } = request;
+        const _queryParams: Record<string, unknown> = {
+            platform:
+                platform != null
+                    ? serializers.GetMarketRequestPlatform.jsonOrThrow(platform, {
+                          unrecognizedObjectKeys: "strip",
+                          omitUndefined: true,
+                      })
+                    : undefined,
+        };
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.PredictorSDKEnvironment.Production,
+                `v1/markets/${core.url.encodePathParam(marketId)}`,
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: serializers.MarketDetailResponse.parseOrThrow(_response.body, {
+                    unrecognizedObjectKeys: "passthrough",
+                    allowUnrecognizedUnionMembers: true,
+                    allowUnrecognizedEnumValues: true,
+                    skipValidation: true,
+                    breadcrumbsPrefix: ["response"],
+                }),
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 400:
+                    throw new PredictorSDK.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 401:
+                    throw new PredictorSDK.UnauthorizedError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new PredictorSDK.PaymentRequiredError(
+                        serializers.PaymentRequiredErrorBody.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new PredictorSDK.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 404:
+                    throw new PredictorSDK.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new PredictorSDK.TooManyRequestsError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 502:
+                    throw new PredictorSDK.BadGatewayError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new PredictorSDK.ServiceUnavailableError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.PredictorSDKError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/markets/{market_id}");
+    }
+
+    /**
      * Returns per-second price data for a Binance trading pair. When called without a time range, returns the latest price. With `start_time` and `end_time`, returns historical per-second prices in newest-first order. Supports cursor-based pagination for large result sets. Unknown or invalid symbols return `200` with `{"prices":[]}` and omit `total`.
      *
      * @param {PredictorSDK.GetBinanceCryptoPricesRequest} request
@@ -878,7 +1062,7 @@ export class PredictorSDKClient {
     }
 
     /**
-     * Returns a single event and the markets nested under it on the identified platform. The `event_id` is the platform's native identifier — a Kalshi `event_ticker`, a Polymarket event slug, an SX Bet `eventId`, or a Predict market identifier. The `platform` is inferred from the ID format when unambiguous; callers must pass `?platform=` for numeric IDs or kebab-case slugs that could belong to either Polymarket or Predict.
+     * Returns a single event and the markets nested under it on the identified platform. The `event_id` is the platform's native identifier — a Kalshi `event_ticker`, a Polymarket event slug, an SX Bet `eventId`, or a Predict market identifier. The `platform` is inferred from the ID format when unambiguous (`KX…` → Kalshi, `L\d+` → SX Bet). Numeric IDs and kebab-case slugs are shared shape between Polymarket and Predict; if `?platform=` is omitted in that case, the service probes Polymarket first and falls back to Predict when Polymarket returns 404. Pass `?platform=` explicitly to skip the probe.
      *
      * Response is minimal in v0: each market is returned with its platform-native `market_id` and a human-readable `title`. Pricing, volume, status, and timestamps are intentionally deferred — they'll be added as additive fields to `EventMarket` in a later release. The endpoint mirrors the `/v1/markets` rollout pattern (titles first, fields later).
      *

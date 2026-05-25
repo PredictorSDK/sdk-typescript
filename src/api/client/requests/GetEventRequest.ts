@@ -11,6 +11,6 @@ import type * as PredictorSDK from "../../index.js";
 export interface GetEventRequest {
     /** Platform-native event identifier. Examples per platform: Kalshi event ticker (`KXMLBGAME-26MAY221840CLEPHI`), Polymarket event slug (`mlb-cle-phi-2026-05-22`), SX Bet event id (`L10073358`), Predict market id (`110629`). */
     eventId: string;
-    /** Optional platform override. When omitted, inferred from the `event_id` format: `KX…` → Kalshi, `L\d+` → SX Bet. Numeric IDs and kebab-case slugs are ambiguous between Polymarket and Predict; supplying `platform` is required in that case or the response is `400`. */
+    /** Optional platform override. When omitted, inferred from the `event_id` format: `KX…` → Kalshi, `L\d+` → SX Bet. Numeric IDs and kebab-case slugs are shared shape between Polymarket and Predict; in that case the service probes Polymarket first and falls back to Predict on 404. Pass `platform` explicitly to skip the probe. */
     platform?: PredictorSDK.GetEventRequestPlatform;
 }
