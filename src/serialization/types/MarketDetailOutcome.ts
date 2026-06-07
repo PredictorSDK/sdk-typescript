@@ -9,10 +9,24 @@ export const MarketDetailOutcome: core.serialization.ObjectSchema<
     PredictorSDK.MarketDetailOutcome
 > = core.serialization.object({
     name: core.serialization.string(),
+    outcomeId: core.serialization.property("outcome_id", core.serialization.string().optional()),
+    price: core.serialization.number().nullable(),
+    bid: core.serialization.number().nullable(),
+    ask: core.serialization.number().nullable(),
+    last: core.serialization.number().nullable(),
+    bidSize: core.serialization.property("bid_size", core.serialization.number().optional()),
+    askSize: core.serialization.property("ask_size", core.serialization.number().optional()),
 });
 
 export declare namespace MarketDetailOutcome {
     export interface Raw {
         name: string;
+        outcome_id?: string | null;
+        price?: number | null;
+        bid?: number | null;
+        ask?: number | null;
+        last?: number | null;
+        bid_size?: number | null;
+        ask_size?: number | null;
     }
 }

@@ -3,7 +3,7 @@
 import type * as PredictorSDK from "../index.js";
 
 /**
- * Single-market detail across all four supported platforms. Strict-universal v0 shape — only fields every platform exposes natively without a second fetch. Pricing/volume/closes_at/ event_id are deliberately omitted, see the endpoint description for the rationale.
+ * Single-market detail across all four supported platforms. Identity fields are strict-universal (no second fetch on any platform); the pricing tier carries per-outcome quotes plus market-level aggregates with explicit nulls where a platform doesn't natively expose a figure — values are never fabricated. closes_at/event_id remain deliberately omitted, see the endpoint description for the rationale.
  */
 export interface MarketDetailResponse {
     /** Composite market identifier in the format `{provider}:{provider_id}`. Matches the `id` field returned by `GET /v1/markets` so list output flows into detail lookups without preprocessing. */
@@ -12,10 +12,23 @@ export interface MarketDetailResponse {
     provider: PredictorSDK.MarketDetailResponseProvider;
     /** Platform-native market identifier. Kalshi ticker, Polymarket numeric id, Predict numeric id, or SX Bet `marketHash`. For Polymarket markets resolved by slug, this is normalized to the numeric id. */
     providerId: string;
-    /** Human-readable market title. Each platform exposes a slightly different field — Kalshi `title`, Polymarket `question`, Predict `title`, SX Bet composed from team names with outcome-name fallback for outright markets. */
+    /** Human-readable market title. Each platform exposes a slightly different field — Kalshi `title`, Polymarket `question`, Predict `title`, SX Bet composed from outcome labels (team-pair fallback) so a game's moneyline, spread, and total markets stay distinguishable. */
     title: string;
     /** Normalized lifecycle status. Mapping per platform: Kalshi `active` → open · `closed`/`determined` → closed · `settled`/`finalized` → settled. Polymarket `archived` → settled · `closed && !archived` → closed · otherwise → open. Predict `tradingStatus=OPEN` → open · `CLOSED && !RESOLVED` → closed · `status=RESOLVED` → settled. SX Bet `ACTIVE` → open · otherwise closed. Unknown upstream values default to closed. */
     status: PredictorSDK.MarketDetailResponseStatus;
-    /** Outcome labels for the market. Every supported platform models per-market outcomes as a 2-element list in practice (multi-outcome events are modeled as multiple binary markets nested under one event/category). Prices and sizes are deliberately omitted from v0 — see the endpoint description. */
+    /** Outcomes with per-outcome quotes. ORDERING GUARANTEE: `outcomes[0]` is the platform's primary/headline outcome — Kalshi `Yes`, Polymarket's first outcome token (its `bestBid`/`bestAsk` side), Predict `indexSet=1`, SX Bet `outcomeOne`. Render `outcomes[0].price` as the headline probability; do NOT search for an outcome named "Yes" (names are free-text on Predict/SX Bet). Every supported platform models per-market outcomes as a 2-element list in practice (multi-outcome events are modeled as multiple binary markets nested under one event/category); the per-outcome quote shape handles binary and any future multi-outcome record identically with no special-casing. */
     outcomes: PredictorSDK.MarketDetailOutcome[];
+    pricing: PredictorSDK.MarketDetailPricing;
+    /** Resting order-book depth valued in USD — strictly CLOB book depth, never an AMM pool size or a synthetic score. Polymarket exposes it natively (`liquidityNum`); null for Kalshi (its upstream `liquidity_dollars` is deprecated and always zero), Predict (stats is null on the record), and SX Bet (no scalar without summing the raw order book). */
+    liquidityUsd: number | null;
+    /** Trailing-24h traded volume in USD notional. Null where the platform doesn't denominate volume in USD — notably Kalshi (contracts; see `volume_24h_contracts`) — or doesn't expose a volume aggregate at all (SX Bet, Predict's record). */
+    volume24HUsd: number | null;
+    /** Lifetime traded volume in USD notional. Same per-platform availability as `volume_24h_usd`. Never fabricated by converting contract counts through a price. */
+    volumeTotalUsd: number | null;
+    /** Trailing-24h traded volume in contracts (Kalshi `volume_24h_fp`; fractional contracts supported). Omitted for platforms that denominate volume in USD. */
+    volume24HContracts?: number;
+    /** Lifetime traded volume in contracts (Kalshi `volume_fp`). Omitted for platforms that denominate volume in USD. */
+    volumeTotalContracts?: number;
+    /** Total outstanding contracts (Kalshi `open_interest_fp`). Contracts, not USD — a positioning gauge kept separate from `liquidity_usd` (depth). Omitted where the platform doesn't expose market-level open interest. */
+    openInterest?: number;
 }

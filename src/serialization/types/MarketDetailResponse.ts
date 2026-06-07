@@ -4,6 +4,7 @@ import type * as PredictorSDK from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 import { MarketDetailOutcome } from "./MarketDetailOutcome.js";
+import { MarketDetailPricing } from "./MarketDetailPricing.js";
 import { MarketDetailResponseProvider } from "./MarketDetailResponseProvider.js";
 import { MarketDetailResponseStatus } from "./MarketDetailResponseStatus.js";
 
@@ -17,6 +18,13 @@ export const MarketDetailResponse: core.serialization.ObjectSchema<
     title: core.serialization.string(),
     status: MarketDetailResponseStatus,
     outcomes: core.serialization.list(MarketDetailOutcome),
+    pricing: MarketDetailPricing,
+    liquidityUsd: core.serialization.property("liquidity_usd", core.serialization.number().nullable()),
+    volume24HUsd: core.serialization.property("volume_24h_usd", core.serialization.number().nullable()),
+    volumeTotalUsd: core.serialization.property("volume_total_usd", core.serialization.number().nullable()),
+    volume24HContracts: core.serialization.property("volume_24h_contracts", core.serialization.number().optional()),
+    volumeTotalContracts: core.serialization.property("volume_total_contracts", core.serialization.number().optional()),
+    openInterest: core.serialization.property("open_interest", core.serialization.number().optional()),
 });
 
 export declare namespace MarketDetailResponse {
@@ -27,5 +35,12 @@ export declare namespace MarketDetailResponse {
         title: string;
         status: MarketDetailResponseStatus.Raw;
         outcomes: MarketDetailOutcome.Raw[];
+        pricing: MarketDetailPricing.Raw;
+        liquidity_usd?: number | null;
+        volume_24h_usd?: number | null;
+        volume_total_usd?: number | null;
+        volume_24h_contracts?: number | null;
+        volume_total_contracts?: number | null;
+        open_interest?: number | null;
     }
 }

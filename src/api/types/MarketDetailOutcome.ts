@@ -3,4 +3,18 @@
 export interface MarketDetailOutcome {
     /** Outcome label as the platform reports it. Kalshi binary markets normalize to `Yes`/`No`; Polymarket parses the stringified outcomes array (also typically `Yes`/`No`); Predict reports per-outcome names; SX Bet uses outcome-one/outcome-two names (e.g. team labels with spreads applied). */
     name: string;
+    /** Stable per-platform key for this outcome: Kalshi `yes`/`no`, Polymarket CLOB token id, Predict on-chain id, SX Bet `outcomeOne`/`outcomeTwo`. The join key for future per-outcome sub-resources (order-book depth). */
+    outcomeId?: string;
+    /** Current implied probability of this outcome in 0–1 — the headline field, equal to the implied probability on every supported platform. Derivation cascade: mid of bid/ask when two-sided → the single available side → last trade → platform mark (Polymarket `outcomePrices`, which preserves 0/1 resolution marks on settled markets). Because the cascade differs by what each platform exposes, `price` is a DISPLAY number — when comparing across platforms or sizing trades, prefer `bid`/`ask` directly where present. Null when no quote of any kind exists. GUARANTEE: when `pricing.availability` is `live`, `price` is non-null on every outcome. Values are rounded to at most 6 decimal places. */
+    price: number | null;
+    /** Best bid for this outcome in 0–1 probability. Null when that book side is empty or the platform doesn't publish per-outcome quotes on the record (Polymarket non-primary outcomes) — never synthesized from `1 − ask`. */
+    bid: number | null;
+    /** Best ask (price to take this outcome) in 0–1 probability. For SX Bet this is derived from the opposite side's best maker quote (`1 − bid(other)`), which is that book's actual taker price. */
+    ask: number | null;
+    /** Last traded price for this outcome in 0–1 probability. Null where the platform exposes no last-trade on the record (Predict, SX Bet). */
+    last: number | null;
+    /** Resting size at the best bid in native contract/share units (NOT USD). Omitted where the platform publishes no per-side size — Kalshi publishes YES-side sizes only; Polymarket and SX Bet publish none on this path. */
+    bidSize?: number;
+    /** Resting size at the best ask in native contract/share units. Same availability as `bid_size`. */
+    askSize?: number;
 }
