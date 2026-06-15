@@ -7,8 +7,8 @@ import type * as serializers from "../index.js";
 export const MarketDetailResponseProvider: core.serialization.Schema<
     serializers.MarketDetailResponseProvider.Raw,
     PredictorSDK.MarketDetailResponseProvider
-> = core.serialization.enum_(["kalshi", "polymarket", "predict", "sxbet"]);
+> = core.serialization.enum_(["kalshi", "polymarket", "predict", "sxbet", "hyperliquid", "alpha-arcade"]);
 
 export declare namespace MarketDetailResponseProvider {
-    export type Raw = "kalshi" | "polymarket" | "predict" | "sxbet";
+    export type Raw = "kalshi" | "polymarket" | "predict" | "sxbet" | "hyperliquid" | "alpha-arcade";
 }

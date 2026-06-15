@@ -6,5 +6,7 @@ export const EventResponsePlatform = {
     Polymarket: "polymarket",
     Predict: "predict",
     Sxbet: "sxbet",
+    Hyperliquid: "hyperliquid",
+    AlphaArcade: "alpha-arcade",
 } as const;
 export type EventResponsePlatform = (typeof EventResponsePlatform)[keyof typeof EventResponsePlatform];

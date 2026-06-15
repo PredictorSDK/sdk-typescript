@@ -6,5 +6,7 @@ export const UnifiedMarketProvider = {
     Polymarket: "polymarket",
     Predict: "predict",
     Sxbet: "sxbet",
+    Hyperliquid: "hyperliquid",
+    AlphaArcade: "alpha-arcade",
 } as const;
 export type UnifiedMarketProvider = (typeof UnifiedMarketProvider)[keyof typeof UnifiedMarketProvider];

@@ -7,8 +7,8 @@ import type * as serializers from "../index.js";
 export const EventResponsePlatform: core.serialization.Schema<
     serializers.EventResponsePlatform.Raw,
     PredictorSDK.EventResponsePlatform
-> = core.serialization.enum_(["kalshi", "polymarket", "predict", "sxbet"]);
+> = core.serialization.enum_(["kalshi", "polymarket", "predict", "sxbet", "hyperliquid", "alpha-arcade"]);
 
 export declare namespace EventResponsePlatform {
-    export type Raw = "kalshi" | "polymarket" | "predict" | "sxbet";
+    export type Raw = "kalshi" | "polymarket" | "predict" | "sxbet" | "hyperliquid" | "alpha-arcade";
 }

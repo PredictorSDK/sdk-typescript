@@ -5,5 +5,7 @@ export const GetEventRequestPlatform = {
     Polymarket: "polymarket",
     Predict: "predict",
     Sxbet: "sxbet",
+    Hyperliquid: "hyperliquid",
+    AlphaArcade: "alpha-arcade",
 } as const;
 export type GetEventRequestPlatform = (typeof GetEventRequestPlatform)[keyof typeof GetEventRequestPlatform];
