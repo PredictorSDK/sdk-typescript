@@ -3,6 +3,7 @@
 import type * as PredictorSDK from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
+import { MarketCategory } from "./MarketCategory.js";
 import { UnifiedMarketProvider } from "./UnifiedMarketProvider.js";
 
 export const UnifiedMarket: core.serialization.ObjectSchema<serializers.UnifiedMarket.Raw, PredictorSDK.UnifiedMarket> =
@@ -10,6 +11,7 @@ export const UnifiedMarket: core.serialization.ObjectSchema<serializers.UnifiedM
         id: core.serialization.string(),
         provider: UnifiedMarketProvider,
         title: core.serialization.string(),
+        category: MarketCategory,
     });
 
 export declare namespace UnifiedMarket {
@@ -17,5 +19,6 @@ export declare namespace UnifiedMarket {
         id: string;
         provider: UnifiedMarketProvider.Raw;
         title: string;
+        category: MarketCategory.Raw;
     }
 }

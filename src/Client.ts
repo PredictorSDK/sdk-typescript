@@ -214,10 +214,17 @@ export class PredictorSDKClient {
         request: PredictorSDK.GetMarketsRequest = {},
         requestOptions?: PredictorSDKClient.RequestOptions,
     ): Promise<core.WithRawResponse<PredictorSDK.MarketsListResponse>> {
-        const { limit, cursor } = request;
+        const { limit, cursor, category } = request;
         const _queryParams: Record<string, unknown> = {
             limit,
             cursor,
+            category:
+                category != null
+                    ? serializers.MarketCategory.jsonOrThrow(category, {
+                          unrecognizedObjectKeys: "strip",
+                          omitUndefined: true,
+                      })
+                    : undefined,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -336,6 +343,121 @@ export class PredictorSDKClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/markets");
+    }
+
+    /**
+     * Returns the canonical top-level categories that can be used to filter unified market discovery with `GET /v1/markets?category=...`. Categories are PredictorSDK-normalized buckets, not provider-native tags. Sports is one category among many; sport/league facets may be added later as deeper filters without changing this top-level list.
+     *
+     * @param {PredictorSDKClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link PredictorSDK.UnauthorizedError}
+     * @throws {@link PredictorSDK.PaymentRequiredError}
+     * @throws {@link PredictorSDK.ForbiddenError}
+     * @throws {@link PredictorSDK.TooManyRequestsError}
+     *
+     * @example
+     *     await client.getCategories()
+     */
+    public getCategories(
+        requestOptions?: PredictorSDKClient.RequestOptions,
+    ): core.HttpResponsePromise<PredictorSDK.CategoriesResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getCategories(requestOptions));
+    }
+
+    private async __getCategories(
+        requestOptions?: PredictorSDKClient.RequestOptions,
+    ): Promise<core.WithRawResponse<PredictorSDK.CategoriesResponse>> {
+        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
+            _authRequest.headers,
+            this._options?.headers,
+            requestOptions?.headers,
+        );
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.PredictorSDKEnvironment.Production,
+                "v1/categories",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: serializers.CategoriesResponse.parseOrThrow(_response.body, {
+                    unrecognizedObjectKeys: "passthrough",
+                    allowUnrecognizedUnionMembers: true,
+                    allowUnrecognizedEnumValues: true,
+                    skipValidation: true,
+                    breadcrumbsPrefix: ["response"],
+                }),
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 401:
+                    throw new PredictorSDK.UnauthorizedError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 402:
+                    throw new PredictorSDK.PaymentRequiredError(
+                        serializers.PaymentRequiredErrorBody.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new PredictorSDK.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 429:
+                    throw new PredictorSDK.TooManyRequestsError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.PredictorSDKError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/categories");
     }
 
     /**

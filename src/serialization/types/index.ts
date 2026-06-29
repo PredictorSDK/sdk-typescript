@@ -1,3 +1,5 @@
+export * from "./CategoriesResponse.js";
+export * from "./CategoryInfo.js";
 export * from "./CryptoPriceItem.js";
 export * from "./CryptoPricesResponse.js";
 export * from "./ErrorResponse.js";
@@ -7,6 +9,7 @@ export * from "./EventResponse.js";
 export * from "./EventResponsePlatform.js";
 export * from "./GetEventRequestPlatform.js";
 export * from "./GetMarketRequestPlatform.js";
+export * from "./MarketCategory.js";
 export * from "./MarketDetailOutcome.js";
 export * from "./MarketDetailPricing.js";
 export * from "./MarketDetailPricingAvailability.js";

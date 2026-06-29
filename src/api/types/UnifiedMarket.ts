@@ -9,4 +9,5 @@ export interface UnifiedMarket {
     provider: PredictorSDK.UnifiedMarketProvider;
     /** Human-readable market title/question. */
     title: string;
+    category: PredictorSDK.MarketCategory;
 }
