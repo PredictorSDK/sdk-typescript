@@ -5,6 +5,8 @@ import type * as PredictorSDK from "../index.js";
 export interface SportsMatchingResponse {
     /** Key-value pairs where each key is the queried identifier (Kalshi event ticker, Polymarket slug, or canonical event ID when no filter is provided) and each value is an array of platform market objects. */
     markets: Record<string, PredictorSDK.PlatformMarket[]>;
+    /** Opt-in canonical identity map, present only when `include_submarkets=true`. Keys match the `markets` response keys; each value contains the canonical event ID and every normalized submarket/source mapping for that event. */
+    canonicalEvents?: Record<string, PredictorSDK.CanonicalSportsEvent>;
     /** Pagination metadata for the current page. Present in list mode (no platform-ID filter). Absent in lookup mode since the response is bounded by the filter. */
     pagination?: PredictorSDK.PaginationBlock;
 }

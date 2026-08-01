@@ -24,7 +24,7 @@ export class PredictorSDKClient {
     }
 
     /**
-     * Find cross-platform market matches for sports events. When called without parameters, returns all currently matched sports markets with cursor-based pagination (default `limit=25`, max `100`). Provide a Kalshi event ticker, Polymarket slug, Predict market ID, or SX Bet market ID to look up a specific event — lookups return the full match immediately and skip pagination.
+     * Find cross-platform market matches for sports events. When called without parameters, returns all currently matched sports markets with cursor-based pagination (default `limit=25`, max `100`). Provide a canonical event key, Kalshi event ticker, Polymarket slug, Predict market ID, or SX Bet market ID to look up a specific event — lookups return the full match immediately and skip pagination.
      *
      * @param {PredictorSDK.GetSportsMatchingMarketsRequest} request
      * @param {PredictorSDKClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -54,6 +54,8 @@ export class PredictorSDKClient {
             limit,
             cursor,
             includeSettled,
+            includeSubmarkets,
+            eventId,
             kalshiEventTicker,
             polymarketMarketSlug,
             predictMarketId,
@@ -63,6 +65,8 @@ export class PredictorSDKClient {
             limit,
             cursor,
             include_settled: includeSettled,
+            include_submarkets: includeSubmarkets,
+            event_id: eventId,
             kalshi_event_ticker: kalshiEventTicker,
             polymarket_market_slug: polymarketMarketSlug,
             predict_market_id: predictMarketId,
