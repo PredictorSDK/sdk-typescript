@@ -17,7 +17,7 @@ function addSymmetricJitter(delay: number): number {
     return delay * jitterMultiplier;
 }
 
-function getRetryDelayFromHeaders(response: Response, retryAttempt: number): number {
+export function getRetryDelayFromHeaders(response: Response, retryAttempt: number): number {
     const retryAfter = response.headers.get("Retry-After");
     if (retryAfter) {
         const retryAfterSeconds = parseInt(retryAfter, 10);
@@ -38,7 +38,8 @@ function getRetryDelayFromHeaders(response: Response, retryAttempt: number): num
     if (rateLimitReset) {
         const resetTime = parseInt(rateLimitReset, 10);
         if (!Number.isNaN(resetTime)) {
-            const delay = resetTime * 1000 - Date.now();
+            const resetTimeMilliseconds = resetTime >= 1_000_000_000_000 ? resetTime : resetTime * 1000;
+            const delay = resetTimeMilliseconds - Date.now();
             if (delay > 0) {
                 return addPositiveJitter(Math.min(delay, MAX_RETRY_DELAY));
             }

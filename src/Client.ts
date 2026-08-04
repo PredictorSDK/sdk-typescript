@@ -19,8 +19,82 @@ export declare namespace PredictorSDKClient {
 export class PredictorSDKClient {
     protected readonly _options: NormalizedClientOptionsWithAuth<PredictorSDKClient.Options>;
 
-    constructor(options: PredictorSDKClient.Options) {
+    constructor(options: PredictorSDKClient.Options = {}) {
         this._options = normalizeClientOptionsWithAuth(options);
+    }
+
+    /**
+     * Returns the machine-readable public billing catalog used by API consumers and pricing surfaces. This endpoint is intentionally unauthenticated. Stripe price IDs and all other provisioning secrets are excluded from the response.
+     *
+     * @param {PredictorSDKClient.RequestOptions} requestOptions - Request-specific configuration.
+     *
+     * @throws {@link PredictorSDK.ServiceUnavailableError}
+     *
+     * @example
+     *     await client.getPlans()
+     */
+    public getPlans(
+        requestOptions?: PredictorSDKClient.RequestOptions,
+    ): core.HttpResponsePromise<PredictorSDK.PlansResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__getPlans(requestOptions));
+    }
+
+    private async __getPlans(
+        requestOptions?: PredictorSDKClient.RequestOptions,
+    ): Promise<core.WithRawResponse<PredictorSDK.PlansResponse>> {
+        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
+        const _response = await core.fetcher({
+            url: core.url.join(
+                (await core.Supplier.get(this._options.baseUrl)) ??
+                    (await core.Supplier.get(this._options.environment)) ??
+                    environments.PredictorSDKEnvironment.Production,
+                "v1/plans",
+            ),
+            method: "GET",
+            headers: _headers,
+            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
+            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
+            abortSignal: requestOptions?.abortSignal,
+            fetchFn: this._options?.fetch,
+            logging: this._options.logging,
+        });
+        if (_response.ok) {
+            return {
+                data: serializers.PlansResponse.parseOrThrow(_response.body, {
+                    unrecognizedObjectKeys: "passthrough",
+                    allowUnrecognizedUnionMembers: true,
+                    allowUnrecognizedEnumValues: true,
+                    skipValidation: true,
+                    breadcrumbsPrefix: ["response"],
+                }),
+                rawResponse: _response.rawResponse,
+            };
+        }
+
+        if (_response.error.reason === "status-code") {
+            switch (_response.error.statusCode) {
+                case 503:
+                    throw new PredictorSDK.ServiceUnavailableError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.PredictorSDKError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
+        }
+
+        return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/plans");
     }
 
     /**

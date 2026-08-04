@@ -31,6 +31,8 @@ export * from "./MarketsListResponse.js";
 export * from "./PaginationBlock.js";
 export * from "./PaymentRequiredErrorAction.js";
 export * from "./PaymentRequiredErrorBody.js";
+export * from "./Plan.js";
+export * from "./PlansResponse.js";
 export * from "./PlatformMarket.js";
 export * from "./PlatformMarketPlatform.js";
 export * from "./PolymarketPosition.js";
