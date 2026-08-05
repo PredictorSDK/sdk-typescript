@@ -1,6 +1,6 @@
 # @predictorsdk/client
 
-The official TypeScript/JavaScript client for the [PredictorSDK](https://predictorsdk.com) matching markets API.
+The official TypeScript/JavaScript client for the [PredictorSDK](https://predictorsdk.com) prediction-market data API.
 
 ## Installation
 
@@ -15,9 +15,11 @@ import { PredictorSDKClient } from "@predictorsdk/client";
 
 const client = new PredictorSDKClient({ token: "your-api-key" });
 
-const { markets } = await client.getSportsMatchingMarkets({
-  kalshiEventTicker: "KXMLB-25-NYM-COL-2025-04-03",
-});
+const plans = await client.getPlans();
+const categories = await client.getCategories();
+const markets = await client.getMarkets({ limit: 10, category: "sports" });
+
+console.log(plans.data, categories.data, markets.data);
 ```
 
 ## Documentation

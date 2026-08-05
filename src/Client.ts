@@ -29,6 +29,8 @@ export class PredictorSDKClient {
      * @param {PredictorSDKClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link PredictorSDK.ServiceUnavailableError}
+     * @throws {@link errors.PredictorSDKError}
+     * @throws {@link errors.PredictorSDKTimeoutError}
      *
      * @example
      *     await client.getPlans()
@@ -108,7 +110,10 @@ export class PredictorSDKClient {
      * @throws {@link PredictorSDK.PaymentRequiredError}
      * @throws {@link PredictorSDK.ForbiddenError}
      * @throws {@link PredictorSDK.TooManyRequestsError}
+     * @throws {@link PredictorSDK.BadGatewayError}
      * @throws {@link PredictorSDK.ServiceUnavailableError}
+     * @throws {@link errors.PredictorSDKError}
+     * @throws {@link errors.PredictorSDKTimeoutError}
      *
      * @example
      *     await client.getSportsMatchingMarkets()
@@ -242,6 +247,17 @@ export class PredictorSDKClient {
                         }),
                         _response.rawResponse,
                     );
+                case 502:
+                    throw new PredictorSDK.BadGatewayError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 503:
                     throw new PredictorSDK.ServiceUnavailableError(
                         serializers.ErrorResponse.parseOrThrow(_response.error.body, {
@@ -276,7 +292,10 @@ export class PredictorSDKClient {
      * @throws {@link PredictorSDK.PaymentRequiredError}
      * @throws {@link PredictorSDK.ForbiddenError}
      * @throws {@link PredictorSDK.TooManyRequestsError}
+     * @throws {@link PredictorSDK.BadGatewayError}
      * @throws {@link PredictorSDK.ServiceUnavailableError}
+     * @throws {@link errors.PredictorSDKError}
+     * @throws {@link errors.PredictorSDKTimeoutError}
      *
      * @example
      *     await client.getMarkets()
@@ -400,6 +419,17 @@ export class PredictorSDKClient {
                         }),
                         _response.rawResponse,
                     );
+                case 502:
+                    throw new PredictorSDK.BadGatewayError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 503:
                     throw new PredictorSDK.ServiceUnavailableError(
                         serializers.ErrorResponse.parseOrThrow(_response.error.body, {
@@ -432,6 +462,10 @@ export class PredictorSDKClient {
      * @throws {@link PredictorSDK.PaymentRequiredError}
      * @throws {@link PredictorSDK.ForbiddenError}
      * @throws {@link PredictorSDK.TooManyRequestsError}
+     * @throws {@link PredictorSDK.BadGatewayError}
+     * @throws {@link PredictorSDK.ServiceUnavailableError}
+     * @throws {@link errors.PredictorSDKError}
+     * @throws {@link errors.PredictorSDKTimeoutError}
      *
      * @example
      *     await client.getCategories()
@@ -526,6 +560,28 @@ export class PredictorSDKClient {
                         }),
                         _response.rawResponse,
                     );
+                case 502:
+                    throw new PredictorSDK.BadGatewayError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 503:
+                    throw new PredictorSDK.ServiceUnavailableError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 default:
                     throw new errors.PredictorSDKError({
                         statusCode: _response.error.statusCode,
@@ -556,6 +612,8 @@ export class PredictorSDKClient {
      * @throws {@link PredictorSDK.TooManyRequestsError}
      * @throws {@link PredictorSDK.BadGatewayError}
      * @throws {@link PredictorSDK.ServiceUnavailableError}
+     * @throws {@link errors.PredictorSDKError}
+     * @throws {@link errors.PredictorSDKTimeoutError}
      *
      * @example
      *     await client.getMarket({
@@ -737,6 +795,8 @@ export class PredictorSDKClient {
      * @throws {@link PredictorSDK.TooManyRequestsError}
      * @throws {@link PredictorSDK.BadGatewayError}
      * @throws {@link PredictorSDK.ServiceUnavailableError}
+     * @throws {@link errors.PredictorSDKError}
+     * @throws {@link errors.PredictorSDKTimeoutError}
      *
      * @example
      *     await client.getBinanceCryptoPrices({
@@ -910,6 +970,8 @@ export class PredictorSDKClient {
      * @throws {@link PredictorSDK.TooManyRequestsError}
      * @throws {@link PredictorSDK.BadGatewayError}
      * @throws {@link PredictorSDK.ServiceUnavailableError}
+     * @throws {@link errors.PredictorSDKError}
+     * @throws {@link errors.PredictorSDKTimeoutError}
      *
      * @example
      *     await client.getPolymarketWallet({
@@ -1093,6 +1155,8 @@ export class PredictorSDKClient {
      * @throws {@link PredictorSDK.TooManyRequestsError}
      * @throws {@link PredictorSDK.BadGatewayError}
      * @throws {@link PredictorSDK.ServiceUnavailableError}
+     * @throws {@link errors.PredictorSDKError}
+     * @throws {@link errors.PredictorSDKTimeoutError}
      *
      * @example
      *     await client.listPolymarketWalletPositions({
@@ -1283,6 +1347,8 @@ export class PredictorSDKClient {
      * @throws {@link PredictorSDK.TooManyRequestsError}
      * @throws {@link PredictorSDK.BadGatewayError}
      * @throws {@link PredictorSDK.ServiceUnavailableError}
+     * @throws {@link errors.PredictorSDKError}
+     * @throws {@link errors.PredictorSDKTimeoutError}
      *
      * @example
      *     await client.getEvent({

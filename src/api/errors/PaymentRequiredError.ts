@@ -5,7 +5,7 @@ import * as errors from "../../errors/index.js";
 import type * as PredictorSDK from "../index.js";
 
 export class PaymentRequiredError extends errors.PredictorSDKError {
-    declare public readonly body: PredictorSDK.PaymentRequiredErrorBody;
+    public declare readonly body: PredictorSDK.PaymentRequiredErrorBody;
 
     constructor(body: PredictorSDK.PaymentRequiredErrorBody, rawResponse?: core.RawResponse) {
         super({
@@ -19,6 +19,6 @@ export class PaymentRequiredError extends errors.PredictorSDKError {
             Error.captureStackTrace(this, this.constructor);
         }
 
-        this.name = this.constructor.name;
+        this.name = "PaymentRequiredError";
     }
 }

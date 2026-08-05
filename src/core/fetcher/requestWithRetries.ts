@@ -41,12 +41,12 @@ export function getRetryDelayFromHeaders(response: Response, retryAttempt: numbe
             const resetTimeMilliseconds = resetTime >= 1_000_000_000_000 ? resetTime : resetTime * 1000;
             const delay = resetTimeMilliseconds - Date.now();
             if (delay > 0) {
-                return addPositiveJitter(Math.min(delay, MAX_RETRY_DELAY));
+                return Math.min(addPositiveJitter(Math.min(delay, MAX_RETRY_DELAY)), MAX_RETRY_DELAY);
             }
         }
     }
 
-    return addSymmetricJitter(Math.min(INITIAL_RETRY_DELAY * 2 ** retryAttempt, MAX_RETRY_DELAY));
+    return Math.min(addSymmetricJitter(Math.min(INITIAL_RETRY_DELAY * 2 ** retryAttempt, MAX_RETRY_DELAY)), MAX_RETRY_DELAY);
 }
 
 export async function requestWithRetries(

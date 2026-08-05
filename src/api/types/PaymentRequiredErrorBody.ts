@@ -10,7 +10,6 @@ export interface PaymentRequiredErrorBody {
     /** Additional detail about the error. */
     message?: string;
     statusCode: number;
-    /** Recommended client action for this 402. */
     action: PredictorSDK.PaymentRequiredErrorAction;
     /** Billing tier that would satisfy the gate (e.g. `starter`, `pro`, `business`, `enterprise`). */
     requiredTier: string;

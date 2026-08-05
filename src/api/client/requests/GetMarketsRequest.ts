@@ -9,7 +9,7 @@ import type * as PredictorSDK from "../../index.js";
 export interface GetMarketsRequest {
     /** Maximum number of markets to return per page. Range 1–100, default 25. */
     limit?: number;
-    /** Opaque cursor from a previous response's `pagination.nextCursor` in the SDKs (raw JSON: `pagination.next_cursor`). */
+    /** Opaque cursor from a previous response's `pagination.nextCursor` in the SDKs (raw JSON: `pagination.next_cursor`). Market cursors stay bound to the immutable catalog snapshot that issued them. Replaced snapshots normally remain available for up to 24 hours, but storage pressure can evict a retained snapshot sooner; retry from the first page after a stale-cursor `400`. */
     cursor?: string;
     /** Canonical top-level category filter. This is PredictorSDK's normalized category, not a provider-native tag. Cursors are bound to the category filter used to create them. */
     category?: PredictorSDK.MarketCategory;
