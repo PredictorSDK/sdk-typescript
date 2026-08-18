@@ -10,6 +10,7 @@ export const PlatformMarket: core.serialization.ObjectSchema<
     PredictorSDK.PlatformMarket
 > = core.serialization.object({
     platform: PlatformMarketPlatform,
+    eventId: core.serialization.property("event_id", core.serialization.string().optional()),
     eventTicker: core.serialization.property("event_ticker", core.serialization.string().optional()),
     marketTickers: core.serialization.property(
         "market_tickers",
@@ -27,6 +28,7 @@ export const PlatformMarket: core.serialization.ObjectSchema<
 export declare namespace PlatformMarket {
     export interface Raw {
         platform: PlatformMarketPlatform.Raw;
+        event_id?: string | null;
         event_ticker?: string | null;
         market_tickers?: string[] | null;
         market_slug?: string | null;

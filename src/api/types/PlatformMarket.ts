@@ -4,6 +4,8 @@ import type * as PredictorSDK from "../index.js";
 
 export interface PlatformMarket {
     platform: PredictorSDK.PlatformMarketPlatform;
+    /** Provider-native parent event or fixture identifier for the path in `GET /v1/events/{event_id}`. Kalshi uses its event ticker, Polymarket its event slug (or numeric event ID fallback), Predict its market ID, SX Bet its `L...` fixture ID, and AlphaArcade its parent market ULID. Always pair it with the events endpoint's `platform` query parameter, passing this row's `platform` value (matched case-insensitively). Predict market IDs and AlphaArcade ULIDs are not shape-distinguishable from Polymarket identifiers, so without that override the events endpoint probes Polymarket first and can answer `200` with an unrelated Polymarket event instead of `404`. Retained snapshots created before this field was introduced may omit it. */
+    eventId?: string;
     /** Kalshi event ticker. Present when platform is KALSHI. */
     eventTicker?: string;
     /** Kalshi market tickers. Present when platform is KALSHI. */

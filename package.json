@@ -1,6 +1,6 @@
 {
   "name": "@predictorsdk/client",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "The official TypeScript/JavaScript client for the PredictorSDK matching markets API",
   "license": "MIT",
   "keywords": [
@@ -47,7 +47,7 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@types/node": "^25.5.2",
+    "@types/node": "^26.2.0",
     "typescript": "^5.7.0"
   }
 }
