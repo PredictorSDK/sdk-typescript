@@ -10,9 +10,12 @@ export interface MarketDetailPricing {
     availability: PredictorSDK.MarketDetailPricingAvailability;
     /** Self-describing unit declaration for all price fields. Single canonical scale today; new values would be added alongside (never replacing) this one. */
     scale: PredictorSDK.MarketDetailPricingScale;
-    /** Where the quotes came from. `market_record` — embedded in the same single-market record as the identity fetch (Kalshi, Polymarket, Predict). `orderbook` — required one bounded second fetch against the platform's order-book surface (SX Bet `/orders/odds/best`, Hyperliquid `l2Book`). */
+    /** Where the quotes came from. `market_record` — embedded in the same single-market record as the identity fetch (Kalshi, Polymarket, Predict). `orderbook` — required one bounded second fetch against the platform's order-book surface (SX Bet `/orderbook-v3/snapshot`, Hyperliquid `l2Book`). */
     source: PredictorSDK.MarketDetailPricingSource;
-    /** Quote freshness as RFC3339. When the two sides carry independent upstream timestamps (SX Bet), this is the OLDER of them — a conservative floor that never over-claims freshness. Hyperliquid uses the `l2Book` server timestamp. Null when the upstream record carries no quote timestamp at all (Predict) — treat freshness as UNKNOWN, not as fresh. Timestamps come from each platform's own clock; for Kalshi/Polymarket the value is the record's last-update time, the closest the platform exposes to a quote timestamp. */
+    /**
+     * Quote freshness as RFC3339. When the two sides carry independent upstream timestamps, this is the OLDER of them — a conservative floor that never over-claims freshness. Hyperliquid uses the `l2Book` server timestamp. Null when the upstream record carries no quote timestamp at all (Predict, AlphaArcade, and SX Bet) — treat freshness as UNKNOWN, not as fresh. Timestamps come from each platform's own clock; for Kalshi/Polymarket the value is the record's last-update time, the closest the platform exposes to a quote timestamp.
+     * SX Bet moved from timestamped to null at its V3 order-book cutover (2026-08-25): V3 publishes an opaque monotonic book `version` and no wall-clock stamp anywhere, and server ingest time is not substituted because it would masquerade as an upstream stamp.
+     */
     asOf: Date | null;
     /** True when this market belongs to a negative-risk multi-outcome event (Polymarket `negRisk`, Predict `isNegRisk`). On a multi-outcome record, outcome prices intentionally need not sum to 1 — do not "normalize" the book. Note that for the BINARY member markets these platforms serve today the flag signals event-level structure (this market is one leg of a mutually-exclusive set); the binary pair itself still sums to ~1. Omitted when false. */
     negRisk?: boolean;

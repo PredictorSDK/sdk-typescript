@@ -3,7 +3,7 @@
 import type * as PredictorSDK from "../index.js";
 
 /**
- * Single-market detail across all six supported platforms. Identity fields are strict-universal (no second fetch on any platform); the pricing tier carries per-outcome quotes plus market-level aggregates with explicit nulls where a platform doesn't natively expose a figure — values are never fabricated. closes_at/event_id remain deliberately omitted, see the endpoint description for the rationale.
+ * Single-market detail across all six supported platforms. Identity fields are strict-universal (no second fetch on any platform); the pricing tier carries per-outcome quotes plus market-level aggregates with explicit nulls where a platform doesn't natively expose a figure — values are never fabricated. The trading_fees tier applies the same rule to the venue's own published fee parameters. closes_at/event_id remain deliberately omitted, see the endpoint description for the rationale.
  */
 export interface MarketDetailResponse {
     /** Composite market identifier in the format `{provider}:{provider_id}`. Matches the `id` field returned by `GET /v1/markets` so list output flows into detail lookups without preprocessing. */
@@ -19,6 +19,7 @@ export interface MarketDetailResponse {
     /** Outcomes with per-outcome quotes. ORDERING GUARANTEE: `outcomes[0]` is the platform's primary/headline outcome — Kalshi `Yes`, Polymarket's first outcome token (its `bestBid`/`bestAsk` side), Predict `indexSet=1`, SX Bet `outcomeOne`, Hyperliquid's first `sideSpec`. Render `outcomes[0].price` as the headline probability; do NOT search for an outcome named "Yes" (names are free-text on Predict/SX Bet/Hyperliquid). Every supported platform models per-market outcomes as a 2-element list in practice (multi-outcome events are modeled as multiple binary markets nested under one event/category); the per-outcome quote shape handles binary and any future multi-outcome record identically with no special-casing. */
     outcomes: PredictorSDK.MarketDetailOutcome[];
     pricing: PredictorSDK.MarketDetailPricing;
+    tradingFees: PredictorSDK.MarketDetailTradingFees;
     /** Resting order-book depth valued in USD — strictly CLOB book depth, never an AMM pool size or a synthetic score. Polymarket exposes it natively (`liquidityNum`); null for Kalshi (its upstream `liquidity_dollars` is deprecated and always zero), Predict (stats is null on the record), and SX Bet/Hyperliquid (no scalar without summing the raw order book). */
     liquidityUsd: number | null;
     /** Trailing-24h traded volume in USD notional. Null where the platform doesn't denominate volume in USD — notably Kalshi (contracts; see `volume_24h_contracts`) — or doesn't expose a volume aggregate at all (SX Bet, Hyperliquid, Predict's record). */

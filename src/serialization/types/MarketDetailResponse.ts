@@ -7,6 +7,7 @@ import { MarketDetailOutcome } from "./MarketDetailOutcome.js";
 import { MarketDetailPricing } from "./MarketDetailPricing.js";
 import { MarketDetailResponseProvider } from "./MarketDetailResponseProvider.js";
 import { MarketDetailResponseStatus } from "./MarketDetailResponseStatus.js";
+import { MarketDetailTradingFees } from "./MarketDetailTradingFees.js";
 
 export const MarketDetailResponse: core.serialization.ObjectSchema<
     serializers.MarketDetailResponse.Raw,
@@ -19,6 +20,7 @@ export const MarketDetailResponse: core.serialization.ObjectSchema<
     status: MarketDetailResponseStatus,
     outcomes: core.serialization.list(MarketDetailOutcome),
     pricing: MarketDetailPricing,
+    tradingFees: core.serialization.property("trading_fees", MarketDetailTradingFees),
     liquidityUsd: core.serialization.property("liquidity_usd", core.serialization.number().nullable()),
     volume24HUsd: core.serialization.property("volume_24h_usd", core.serialization.number().nullable()),
     volumeTotalUsd: core.serialization.property("volume_total_usd", core.serialization.number().nullable()),
@@ -36,6 +38,7 @@ export declare namespace MarketDetailResponse {
         status: MarketDetailResponseStatus.Raw;
         outcomes: MarketDetailOutcome.Raw[];
         pricing: MarketDetailPricing.Raw;
+        trading_fees: MarketDetailTradingFees.Raw;
         liquidity_usd?: number | null;
         volume_24h_usd?: number | null;
         volume_total_usd?: number | null;
