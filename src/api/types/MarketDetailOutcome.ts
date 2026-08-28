@@ -5,7 +5,13 @@ export interface MarketDetailOutcome {
     name: string;
     /** Stable per-platform key for this outcome: Kalshi `yes`/`no`, Polymarket CLOB token id, Predict on-chain id, SX Bet `outcomeOne`/`outcomeTwo`, Hyperliquid coin encoding (`#<10*outcome+side>`). The join key for future per-outcome sub-resources (order-book depth). */
     outcomeId?: string;
-    /** Current implied probability of this outcome in 0–1 — the headline field, equal to the implied probability on every supported platform. Derivation cascade: mid of bid/ask when two-sided → the single available side → last trade → platform mark (Polymarket `outcomePrices`, which preserves 0/1 resolution marks on settled markets). Because the cascade differs by what each platform exposes, `price` is a DISPLAY number — when comparing across platforms or sizing trades, prefer `bid`/`ask` directly where present. Null when no quote of any kind exists. GUARANTEE: when `pricing.availability` is `live`, `price` is non-null on every outcome. Values are rounded to at most 6 decimal places. */
+    /**
+     * Current implied probability of this outcome in 0–1 — the headline field, equal to the implied probability on every supported platform. Derivation cascade: mid of bid/ask when two-sided → the single available side → last trade → platform mark (Polymarket `outcomePrices`, which preserves 0/1 resolution marks on settled markets; AlphaArcade's catalog midpoint). Because the cascade differs by what each platform exposes, `price` is a DISPLAY number — when comparing across platforms or sizing trades, prefer `bid`/`ask` directly where present. Null when no quote of any kind exists.
+     *
+     * **A non-null `price` does not mean a tradeable price.** The last two rungs of the cascade produce a number with no book behind it, and the mid of a 0.01 / 0.99 book produces a confident-looking 0.5 that no one will fill. Read `pricing.availability` first: `live` says at least one outcome has a book the venue treats as quoted; `indicative` says every price here is a mark, a lone side, or a book the venue's own spread threshold rejects.
+     *
+     * GUARANTEE: when `pricing.availability` is `live` or `indicative`, `price` is non-null on every outcome. Values are rounded to at most 6 decimal places.
+     */
     price: number | null;
     /** Best bid for this outcome in 0–1 probability. Null when that book side is empty or the platform doesn't publish per-outcome quotes on the record (Polymarket non-primary outcomes). Hyperliquid's second side is derived from the merged book complement (`1 − first-side ask`), matching the platform's order-book structure; no other platform synthesizes bid from `1 − ask`. */
     bid: number | null;

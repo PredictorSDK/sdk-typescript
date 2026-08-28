@@ -7,8 +7,8 @@ import type * as serializers from "../index.js";
 export const MarketDetailPricingAvailability: core.serialization.Schema<
     serializers.MarketDetailPricingAvailability.Raw,
     PredictorSDK.MarketDetailPricingAvailability
-> = core.serialization.enum_(["live", "partial", "no_quotes", "unavailable"]);
+> = core.serialization.enum_(["live", "indicative", "partial", "no_quotes", "unavailable"]);
 
 export declare namespace MarketDetailPricingAvailability {
-    export type Raw = "live" | "partial" | "no_quotes" | "unavailable";
+    export type Raw = "live" | "indicative" | "partial" | "no_quotes" | "unavailable";
 }

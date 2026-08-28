@@ -5,6 +5,8 @@ import type * as PredictorSDK from "../index.js";
 export interface MarketsListResponse {
     /** Array of markets for the current page. */
     data: PredictorSDK.UnifiedMarket[];
+    /** Freshness of the catalog snapshot this page was served from. Describes the DATA; `pagination` describes the page. */
+    snapshot: PredictorSDK.MarketsSnapshot;
     /** Pagination metadata for the current page. */
     pagination: PredictorSDK.PaginationBlock;
 }

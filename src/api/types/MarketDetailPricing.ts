@@ -4,19 +4,62 @@ import type * as PredictorSDK from "../index.js";
 
 /**
  * Market-wide quote metadata for the pricing tier. Always present on the response; `availability` tells the truth about what the tier could hydrate instead of leaving consumers to guess from nulls.
+ *
+ * **Bounding quote freshness.** `as_of` is the provider's own stamp and means something different on each platform, so read `as_of_kind` before applying an age bound to it — only `as_of_kind: quote` tracks the quote closely enough to bound at all, and how tight that bound can be still varies by venue. `observed_at` is PredictorSDK's own read time and means the same thing on every provider, so it is the field to bound when you need one threshold that behaves identically across platforms.
  */
 export interface MarketDetailPricing {
-    /** `live` — every outcome carries a price. `partial` — some but not all outcomes priced. `no_quotes` — the pricing fetch succeeded but the book is empty (SX Bet or Hyperliquid with no resting orders; Kalshi provisional/multivariate markets whose quotes are empty-book placeholders). `unavailable` — the pricing enrichment fetch failed or timed out (SX Bet/Hyperliquid); identity fields are still served. */
+    /**
+     * How completely — and how honestly — the pricing tier hydrated. It answers two questions in this precedence order: did every outcome get a price, and is any of those prices backed by a book you could actually cross.
+     *
+     * `live` — every outcome carries a price AND at least one outcome has a two-sided book the venue itself treats as quoted. **This is the only value that licenses reading `price` as a tradeable level.**
+     *
+     * `indicative` — every outcome carries a price, but no outcome has such a book behind it. The prices are marks, one side of a book with nothing facing it, or a two-sided book wider than the venue's own published spread threshold for that market. Concretely: an AlphaArcade market whose order book is empty, where the catalog midpoint is the only price left standing; a Predict market quoted 0.01 / 0.99, whose 0.5 midpoint is arithmetic rather than a market (Predict publishes a per-market `spreadThreshold` and this server honours it); a settled Polymarket market whose 1/0 `outcomePrices` are resolution marks; or a book with one resting order and nothing on the other side. `price` is still populated and still the venue's own number — treat it as roughly where the market is thought to be, never as a level you can trade or arbitrage against. **Filter or flag `indicative` before computing cross-venue edges**: an `indicative` 0.5 next to a `live` 0.735 elsewhere is not a 23¢ opportunity, it is one venue with no book.
+     *
+     * `partial` — some but not all outcomes priced. Incompleteness is reported ahead of quote quality because it is the louder warning, so a `partial` market says nothing about the book behind the prices it does carry.
+     *
+     * `no_quotes` — the pricing read succeeded and there is nothing at all: no book and no mark (SX Bet or Hyperliquid with no resting orders; Kalshi provisional/multivariate markets whose quotes are empty-book placeholders; AlphaArcade markets that have never traded). An empty book truthfully read is still an observation, so `observed_at` is populated.
+     *
+     * `unavailable` — the pricing enrichment fetch failed or timed out (SX Bet/Hyperliquid); identity fields are still served and `observed_at` is null.
+     */
     availability: PredictorSDK.MarketDetailPricingAvailability;
     /** Self-describing unit declaration for all price fields. Single canonical scale today; new values would be added alongside (never replacing) this one. */
     scale: PredictorSDK.MarketDetailPricingScale;
     /** Where the quotes came from. `market_record` — embedded in the same single-market record as the identity fetch (Kalshi, Polymarket, Predict). `orderbook` — required one bounded second fetch against the platform's order-book surface (SX Bet `/orderbook-v3/snapshot`, Hyperliquid `l2Book`). */
     source: PredictorSDK.MarketDetailPricingSource;
     /**
-     * Quote freshness as RFC3339. When the two sides carry independent upstream timestamps, this is the OLDER of them — a conservative floor that never over-claims freshness. Hyperliquid uses the `l2Book` server timestamp. Null when the upstream record carries no quote timestamp at all (Predict, AlphaArcade, and SX Bet) — treat freshness as UNKNOWN, not as fresh. Timestamps come from each platform's own clock; for Kalshi/Polymarket the value is the record's last-update time, the closest the platform exposes to a quote timestamp.
-     * SX Bet moved from timestamped to null at its V3 order-book cutover (2026-08-25): V3 publishes an opaque monotonic book `version` and no wall-clock stamp anywhere, and server ingest time is not substituted because it would masquerade as an upstream stamp.
+     * The upstream timestamp on this platform's own clock, as RFC3339. When the two sides carry independent stamps this is the OLDER of them — a conservative floor that never over-claims freshness. Null when the record carries no timestamp at all (Predict, AlphaArcade, and SX Bet).
+     *
+     * **This field is NOT a uniform freshness bound. Read `as_of_kind` first.** What it measures differs per platform: on Hyperliquid it is the order book's server time and moves with the book, while on Kalshi it is a record write that does not move while the market is quoted. Measured live on 2026-08-24 over two runs — 100 open markets read twice 7.5 minutes apart, and 96 open markets read twice 11 minutes apart:
+     *
+     * * `kalshi` — **15 hours to 137 days old** on markets reporting `status: open` and `availability: live` with a real two-sided book. The age tracks how long ago the record was last written, so it depends entirely on the market: same-day game markets ran a median of ~23 h in one sample and ~43 h in another, while a broad sample of the market list ran a median of ~101 days (`CHINAUSGDP-30`, `status: open`, quoted 0.15 / 0.19, was stamped 2026-04-09). Advanced on 0 of 39 and 0 of 42 markets across the two runs, including five whose prices moved inside the window. **Not boundable at any threshold — do not infer one from these numbers.**
+     * * `polymarket` — 45 s to 405 s old; advanced on 60 of 60 and 25 of 25 markets, while only 1 of those 25 prices changed. Values recur identically across dozens of unrelated markets (one batch write, not one quote). Bounds record age in minutes, not quote age in seconds.
+     * * `sxbet` — a real per-side quote stamp on the V2 best-odds path, but it marks when the resting top-of-book order was posted, so on a thin book it is legitimately old: measured 39 s to 2.5 h, median ~24 min. It advances when the quote advances, which is what makes it a quote stamp — but size the bound to the venue's liquidity, not in seconds. Null from the 2026-08-25 V3 cutover onward.
+     * * `hyperliquid` — the `l2Book` server timestamp, a real quote stamp and the one field here that genuinely supports a seconds-scale bound: polled directly it tracks wall clock to the second.
+     * * `predict`, `alpha-arcade` — always null.
+     *
+     * These ranges are observed behaviour, not a contract: they are published so a consumer can pick a threshold from measured data rather than guessing, and they can change whenever a venue changes how it writes its records. Server ingest time is never substituted into this field — that would masquerade as an upstream stamp. Use `observed_at` for the read time.
      */
     asOf: Date | null;
+    /**
+     * What `as_of` MEASURES on this provider, so one consumer code path can bound freshness tightly where the value is a quote time and refuse to pretend where it is not. Always present; `unknown` whenever `as_of` is null, never an empty string.
+     *
+     * `quote` — the stamp advances when the quote advances, so an age bound on it is meaningful. Hyperliquid (`l2Book` server time) and SX Bet's V2 best-odds path. How TIGHT that bound can be still depends on the venue: Hyperliquid's tracks wall clock to the second, while SX Bet's marks when the resting top-of-book order was posted and is legitimately tens of minutes old on a thin book. Size the threshold to the venue's liquidity; a blanket seconds-scale bound rejects most of SX Bet.
+     *
+     * `record_refresh` — the stamp advances on a periodic rewrite of the provider's record, independent of whether the quote moved. Bounds RECORD age (minutes), not quote age. Polymarket.
+     *
+     * `record_static` — the stamp does not advance while the market is actively quoted, so it bounds nothing at any threshold. Kalshi. Treat quote freshness as unknown here and do not gate on `as_of`; bound `observed_at` instead and take executable price from the venue's own book.
+     *
+     * `unknown` — `as_of` is null: the record carries no timestamp of any kind (Predict, AlphaArcade, SX Bet V3). Kept distinct from `record_static` because the underlying fact differs even though the consumer's action does not.
+     */
+    asOfKind: PredictorSDK.MarketDetailPricingAsOfKind;
+    /**
+     * When PREDICTORSDK read these quotes, as RFC3339 — an observation timestamp, not an upstream one. Named `observed_at` rather than `as_of` for the same reason `trading_fees.observed_at` is: `as_of` is the provider's own stamp, and reusing the name for a differently-defined value would bake that confusion into a second field.
+     *
+     * This is the one timestamp on the response whose definition does not vary by platform, which makes it the field to bound when you need a single threshold that behaves identically everywhere. It bounds the age of the READ, not the age of the quote: on a `record_static` provider a fresh `observed_at` beside a 23-hour `as_of` is the honest description of what the venue served. `/v1/markets/{market_id}` reads the venue live on every request and caches nothing, so this stamp is the request time.
+     *
+     * Taken BEFORE the upstream call, so it is never newer than the moment the quotes were actually observed and `now - observed_at` never understates their age. Null only when `availability` is `unavailable` — no quotes were observed, so there is nothing to stamp. Populated for `no_quotes`, where an empty book is a successful observation.
+     */
+    observedAt: Date | null;
     /** True when this market belongs to a negative-risk multi-outcome event (Polymarket `negRisk`, Predict `isNegRisk`). On a multi-outcome record, outcome prices intentionally need not sum to 1 — do not "normalize" the book. Note that for the BINARY member markets these platforms serve today the flag signals event-level structure (this market is one leg of a mutually-exclusive set); the binary pair itself still sums to ~1. Omitted when false. */
     negRisk?: boolean;
 }

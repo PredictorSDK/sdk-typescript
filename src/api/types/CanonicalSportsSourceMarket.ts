@@ -4,7 +4,11 @@ import type * as PredictorSDK from "../index.js";
 
 export interface CanonicalSportsSourceMarket {
     provider: PredictorSDK.CanonicalSportsSourceMarketProvider;
-    /** Exact provider-native market identifier. */
+    /**
+     * Exact provider-native market identifier. It resolves on `GET /v1/markets/{market_id}`, either as-is or prefixed with this row's `provider` in the composite form `{provider}:{market_id}`.
+     *
+     * One provider can contribute MORE THAN ONE entry to the same submarket, because a provider is free to model one canonical market as several native ones. Kalshi does exactly that for a game moneyline: it lists one binary market per team ("Arizona wins", "San Francisco wins"), so a Kalshi moneyline row appears twice, once per team ticker, each with its own `yes`/`no` outcomes. Group by `provider` if you need one row per venue; do not assume the list has at most one entry per provider.
+     */
     marketId: string;
     marketName?: string;
     marketSlug?: string;

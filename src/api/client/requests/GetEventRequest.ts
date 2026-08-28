@@ -5,12 +5,18 @@ import type * as PredictorSDK from "../../index.js";
 /**
  * @example
  *     {
- *         eventId: "KXMLBGAME-26MAY221840CLEPHI"
+ *         eventId: "KXNBAGAME-26OCT20OKCSAS"
  *     }
  */
 export interface GetEventRequest {
-    /** Platform-native event identifier. Examples per platform: Kalshi event ticker (`KXMLBGAME-26MAY221840CLEPHI`), Polymarket event slug (`mlb-cle-phi-2026-05-22`), SX Bet event id (`L10073358`), Predict market id (`110629`), Hyperliquid question or outcome integer id (`19` or `172`; requires `?platform=hyperliquid` since integer ids aren't inferred). */
+    /**
+     * Platform-native event identifier. Examples per platform: Kalshi event ticker (`KXNBAGAME-26OCT20OKCSAS`), Polymarket event slug (`mlb-tor-cle-2026-09-02`), SX Bet event id (`L19766755`), Predict market id (`1607914`), Hyperliquid question or outcome integer id (requires `?platform=hyperliquid` since integer ids aren't inferred). The composite `{provider}:{native_id}` form (e.g. `predict:1607914`) is accepted here too and dispatches without probing.
+     *
+     * **A bare numeric id or slug is not unique across platforms.** Polymarket and Predict both use these shapes and their id spaces overlap, so sending one without a platform can fail with `409` (see that response). Pass `?platform=` — every row of `GET /v1/matching-markets/sports` carries the `platform` that goes with its `event_id`.
+     *
+     * **Sports identifiers expire.** Game tickers and slugs are delisted once an event settles, and Hyperliquid ids roll over daily. Take current ones from `GET /v1/matching-markets/sports` (every platform row carries its provider-native `event_id`) rather than copying one out of this reference.
+     */
     eventId: string;
-    /** Optional platform override. When omitted, inferred from the `event_id` format: `KX…` → Kalshi, `L\d+` → SX Bet. Numeric IDs and kebab-case slugs are shared shape between Polymarket and Predict; in that case the service probes Polymarket first and falls back to Predict on 404. Hyperliquid question/outcome integer ids collide with these numerics and are not inferred — pass `?platform=hyperliquid` (alias `hl`). Pass `platform` explicitly to skip the probe. */
+    /** Optional platform override. When omitted, inferred from the `event_id` format: `KX…` → Kalshi, `L\d+` → SX Bet. Numeric IDs and kebab-case slugs are shared shape between Polymarket and Predict; in that case the service probes both and returns `409` rather than guessing if the identifier resolves on both. Hyperliquid question/outcome integer ids collide with these numerics and are not inferred — pass `?platform=hyperliquid` (alias `hl`). Passing `platform` explicitly skips the probe entirely and is the recommended call whenever you know it. Supplying a value that contradicts a composite `{provider}:` prefix is a `400`. */
     platform?: PredictorSDK.GetEventRequestPlatform;
 }

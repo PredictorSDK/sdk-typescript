@@ -4,7 +4,13 @@ export interface CanonicalSportsSourceOutcome {
     /** Canonical outcome this source-native selection represents. */
     canonicalOutcomeKey: string;
     label?: string;
-    /** Exact provider-native outcome/token identifier when available. SX Bet exposes one market hash and two named positions rather than separate outcome tokens, so its source-local selection reference is `<market_hash>:1` or `<market_hash>:2`. This field is never a universal cross-provider outcome ID. */
+    /**
+     * Exact provider-native outcome identifier. It is never a universal cross-provider outcome ID.
+     *
+     * On every provider this is the same value `GET /v1/markets/{market_id}` returns as `outcomes[].outcome_id` for the market named by this row's `market_id`, so the two surfaces join directly.
+     *
+     * `polymarket`, `predict` and `alpha-arcade` publish a globally unique per-outcome token (Polymarket CLOB token id, Predict on-chain id, AlphaArcade CLOB token id). `sxbet` and `kalshi` publish no per-outcome token at all, so their references are market-scoped and must be read together with `market_id`: an SX Bet market has one hash and two named positions (`outcomeOne` / `outcomeTwo`), and a Kalshi market is binary (`yes` / `no`). Both are the spelling the venue itself uses to address a side — SX Bet keys its order-book snapshot by `outcomeOne`/`outcomeTwo`, and Kalshi keys its book by `yes`/`no` and reports a trade's `taker_side` the same way.
+     */
     outcomeId?: string;
     /** Optional source-native side such as `yes` or `no`. */
     side?: string;

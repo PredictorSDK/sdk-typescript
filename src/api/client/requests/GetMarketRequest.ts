@@ -5,12 +5,18 @@ import type * as PredictorSDK from "../../index.js";
 /**
  * @example
  *     {
- *         marketId: "kalshi:KXNBA-26-SAS"
+ *         marketId: "kalshi:KXNBA-27-SAS"
  *     }
  */
 export interface GetMarketRequest {
-    /** Composite (`{provider}:{native_id}`) or platform-native market identifier. Examples per platform: Kalshi market ticker (`KXNBA-26-SAS`), Polymarket numeric id or slug (`540817` or `new-rhianna-album-before-gta-vi-926`), Predict market id (`356635`), SX Bet `marketHash` (`0x…64hex`), Hyperliquid outcome id (use the composite `hyperliquid:172` or `?platform=hyperliquid` — bare integer ids aren't inferred). */
+    /**
+     * Composite (`{provider}:{native_id}`) or platform-native market identifier. Examples per platform: Kalshi market ticker (`KXNBA-27-SAS`), Polymarket numeric id or slug (`540817` or `mlb-tor-cle-2026-09-02`), Predict market id (`356635`), SX Bet `marketHash` (`0x…64hex`), Hyperliquid outcome id (use the composite `hyperliquid:<outcome-id>` or `?platform=hyperliquid` — bare integer ids aren't inferred).
+     *
+     * **A bare numeric id or slug is not unique across platforms.** Polymarket and Predict both use these shapes and their id spaces overlap, so sending one without a platform can fail with `409` (see that response). Prefer the composite form — it is what `GET /v1/markets` returns in `data[].id` — or pass `?platform=`.
+     *
+     * **Sports identifiers expire.** Kalshi game tickers, Polymarket game slugs, and Hyperliquid outcome ids are recycled or delisted as events settle — Hyperliquid's live catalog is a handful of daily-recurring outcomes, so any specific integer id there is valid for roughly a day. Take current ids from `GET /v1/markets` or `GET /v1/matching-markets/sports` rather than copying one out of this reference. Long-dated markets (Kalshi season futures, multi-year AlphaArcade questions) and settled Polymarket/Predict/SX Bet ids stay resolvable.
+     */
     marketId: string;
-    /** Optional platform override. When omitted, inferred from the composite prefix or from the native ID format (`KX…` → Kalshi, `0x…64hex` → SX Bet). Numeric IDs and kebab-case slugs are shared shape between Polymarket and Predict; in that case the service probes Polymarket first and falls back to Predict on 404. Hyperliquid integer ids collide with these numerics and are not inferred — use the composite `hyperliquid:<id>` or `?platform=hyperliquid` (alias `hl`). Pass `platform` explicitly to skip the probe. When the override contradicts a composite prefix (e.g. `kalshi:X` with `?platform=polymarket`), the request returns 400. */
+    /** Optional platform override. When omitted, inferred from the composite prefix or from the native ID format (`KX…` → Kalshi, `0x…64hex` → SX Bet). Numeric IDs and kebab-case slugs are shared shape between Polymarket and Predict; in that case the service probes both and returns `409` rather than guessing if the identifier resolves on both. Hyperliquid integer ids collide with these numerics and are not inferred — use the composite `hyperliquid:<id>` or `?platform=hyperliquid` (alias `hl`). Passing `platform` explicitly skips the probe entirely and is the recommended call whenever you know it. When the override contradicts a composite prefix (e.g. `kalshi:X` with `?platform=polymarket`), the request returns 400. */
     platform?: PredictorSDK.GetMarketRequestPlatform;
 }

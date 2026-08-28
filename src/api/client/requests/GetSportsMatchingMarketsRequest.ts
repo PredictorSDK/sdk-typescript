@@ -9,18 +9,24 @@ export interface GetSportsMatchingMarketsRequest {
     limit?: number;
     /** Opaque cursor from a previous response's `pagination.nextCursor` in the SDKs (raw JSON: `pagination.next_cursor`). Must be used with the same filter set — a cursor from `include_settled=true` cannot be replayed against `include_settled=false` and will return `400`. */
     cursor?: string;
-    /** When `true`, include settled/archived events alongside currently live matches. Defaults to `false`. */
+    /**
+     * Selects which events this request draws from, in list mode and in lookup mode alike. Defaults to `false`: only events whose scheduled start has not certainly passed — today's games, plus a one-day grace so a late start that runs past midnight Eastern is never dropped mid-play. Set it to `true` to also get events whose game date is further in the past, including ones a venue still lists as open.
+     *
+     * A venue can keep quoting a market for months after the game (a 94-day-old row was still `status: open` with a live two-sided book when this was written), so the endpoint filters on the game date it already holds — the trailing date of the canonical `event_id` — rather than on an upstream status it cannot verify. Nothing is reported as settled that the venue has not settled; these events are simply not *current*, which is what the default page is for.
+     *
+     * Because it selects the population, a lookup (`?event_id=`, `?polymarket_market_slug=`, …) for a past-dated event answers `200` with an empty `markets` object unless this is `true`.
+     */
     includeSettled?: boolean;
     /** When `true`, add `canonical_events` with normalized event, submarket, line, segment, outcome, and exact source market/outcome identity. This is an identity mapping only; fetch current status, quotes, and liquidity from the referenced market resources. Defaults to `false` so the compact Dome-compatible response is unchanged. */
     includeSubmarkets?: boolean;
-    /** Canonical event key(s) to look up directly (for example, `mlb-tex-hou-2026-07-31`). Provide the parameter multiple times for multiple events, up to 100 unique keys. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
+    /** Canonical event key(s) to look up directly (for example, `nba-okc-sas-2026-10-20`). Provide the parameter multiple times for multiple events, up to 100 unique keys. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
     eventId?: string | string[];
-    /** Kalshi event ticker(s) to find matching markets for (e.g. `KXNFLGAME-25AUG16ARIDEN`). Provide the parameter multiple times for multiple tickers, up to 100 unique values. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
+    /** Kalshi event ticker(s) to find matching markets for (e.g. `KXNBAGAME-26OCT20OKCSAS`). Provide the parameter multiple times for multiple tickers, up to 100 unique values. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
     kalshiEventTicker?: string | string[];
-    /** Polymarket market slug(s) to find matching markets for (e.g. `nfl-ari-den-2025-08-16`). Provide the parameter multiple times for multiple slugs, up to 100 unique values. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
+    /** Polymarket market slug(s) to find matching markets for (e.g. `mlb-tor-cle-2026-09-02`). Provide the parameter multiple times for multiple slugs, up to 100 unique values. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
     polymarketMarketSlug?: string | string[];
-    /** Predict market ID(s) to find matching markets for (e.g. `110629`). Provide the parameter multiple times for multiple IDs, up to 100 unique values. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
+    /** Predict market ID(s) to find matching markets for (e.g. `1607914`). Provide the parameter multiple times for multiple IDs, up to 100 unique values. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
     predictMarketId?: string | string[];
-    /** SX Bet market ID(s) to find matching markets for (e.g. `0x4c000abdbf197ef32ecdf15561b1d636f1e5b02629f466678757fd83e2ec3599`). Provide the parameter multiple times for multiple IDs, up to 100 unique values. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
+    /** SX Bet market ID(s) to find matching markets for (e.g. `0xb4d047a709aae881e5ccad9d123592967644ee1df1f17078c762b388e41b81c5`). Provide the parameter multiple times for multiple IDs, up to 100 unique values. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
     sxbetMarketId?: string | string[];
 }

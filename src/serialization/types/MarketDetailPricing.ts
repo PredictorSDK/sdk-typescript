@@ -3,6 +3,7 @@
 import type * as PredictorSDK from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
+import { MarketDetailPricingAsOfKind } from "./MarketDetailPricingAsOfKind.js";
 import { MarketDetailPricingAvailability } from "./MarketDetailPricingAvailability.js";
 import { MarketDetailPricingScale } from "./MarketDetailPricingScale.js";
 import { MarketDetailPricingSource } from "./MarketDetailPricingSource.js";
@@ -15,6 +16,8 @@ export const MarketDetailPricing: core.serialization.ObjectSchema<
     scale: MarketDetailPricingScale,
     source: MarketDetailPricingSource,
     asOf: core.serialization.property("as_of", core.serialization.date().nullable()),
+    asOfKind: core.serialization.property("as_of_kind", MarketDetailPricingAsOfKind),
+    observedAt: core.serialization.property("observed_at", core.serialization.date().nullable()),
     negRisk: core.serialization.property("neg_risk", core.serialization.boolean().optional()),
 });
 
@@ -24,6 +27,8 @@ export declare namespace MarketDetailPricing {
         scale: MarketDetailPricingScale.Raw;
         source: MarketDetailPricingSource.Raw;
         as_of?: string | null;
+        as_of_kind: MarketDetailPricingAsOfKind.Raw;
+        observed_at?: string | null;
         neg_risk?: boolean | null;
     }
 }

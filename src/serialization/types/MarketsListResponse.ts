@@ -3,6 +3,7 @@
 import type * as PredictorSDK from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
+import { MarketsSnapshot } from "./MarketsSnapshot.js";
 import { PaginationBlock } from "./PaginationBlock.js";
 import { UnifiedMarket } from "./UnifiedMarket.js";
 
@@ -11,12 +12,14 @@ export const MarketsListResponse: core.serialization.ObjectSchema<
     PredictorSDK.MarketsListResponse
 > = core.serialization.object({
     data: core.serialization.list(UnifiedMarket),
+    snapshot: MarketsSnapshot,
     pagination: PaginationBlock,
 });
 
 export declare namespace MarketsListResponse {
     export interface Raw {
         data: UnifiedMarket.Raw[];
+        snapshot: MarketsSnapshot.Raw;
         pagination: PaginationBlock.Raw;
     }
 }

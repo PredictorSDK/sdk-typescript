@@ -13,4 +13,14 @@ export interface GetMarketsRequest {
     cursor?: string;
     /** Canonical top-level category filter. This is PredictorSDK's normalized category, not a provider-native tag. Cursors are bound to the category filter used to create them. */
     category?: PredictorSDK.MarketCategory;
+    /**
+     * Restrict the page to one provider, matched against each row's own `provider` value. Without it, providers are walked in the order below and a caller wanting a later one has to paginate through every earlier provider's rows first.
+     *
+     * Only the canonical provider IDs are accepted, case-insensitively. Any other value returns `400` listing the legal ones — an unrecognized filter is never ignored, because a silently dropped filter returns a full unfiltered page that looks filtered.
+     *
+     * `pagination.total` counts only the selected provider's rows, and cursors are bound to the filter that created them: replay a `next_cursor` with the same `provider` value, or start again from the first page.
+     *
+     * This is a catalog membership filter, and it is spelled `provider` because that is the field it selects on. It is unrelated to the `platform` override on `GET /v1/markets/{market_id}` and `GET /v1/events/{event_id}`, which names the venue an identifier should be resolved against rather than filtering a list.
+     */
+    provider?: PredictorSDK.GetMarketsRequestProvider;
 }

@@ -3,7 +3,7 @@
 import type * as PredictorSDK from "../index.js";
 
 export interface UnifiedMarket {
-    /** Composite market identifier in the format `{provider}:{provider_id}` (e.g. `kalshi:KXNBAGAME-26MAR06INDLAL-LAL`). */
+    /** Composite market identifier in the format `{provider}:{provider_id}` (e.g. `kalshi:AMAZONFTC-29DEC31`). */
     id: string;
     /** Prediction market provider. */
     provider: PredictorSDK.UnifiedMarketProvider;
