@@ -7,5 +7,7 @@ export const GetEventRequestPlatform = {
     Sxbet: "sxbet",
     Hyperliquid: "hyperliquid",
     AlphaArcade: "alpha-arcade",
+    Prophetx: "prophetx",
+    Limitless: "limitless",
 } as const;
 export type GetEventRequestPlatform = (typeof GetEventRequestPlatform)[keyof typeof GetEventRequestPlatform];

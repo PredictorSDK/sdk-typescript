@@ -7,8 +7,25 @@ import type * as serializers from "../index.js";
 export const UnifiedMarketProvider: core.serialization.Schema<
     serializers.UnifiedMarketProvider.Raw,
     PredictorSDK.UnifiedMarketProvider
-> = core.serialization.enum_(["kalshi", "polymarket", "predict", "sxbet", "hyperliquid", "alpha-arcade"]);
+> = core.serialization.enum_([
+    "kalshi",
+    "polymarket",
+    "predict",
+    "sxbet",
+    "hyperliquid",
+    "alpha-arcade",
+    "prophetx",
+    "limitless",
+]);
 
 export declare namespace UnifiedMarketProvider {
-    export type Raw = "kalshi" | "polymarket" | "predict" | "sxbet" | "hyperliquid" | "alpha-arcade";
+    export type Raw =
+        | "kalshi"
+        | "polymarket"
+        | "predict"
+        | "sxbet"
+        | "hyperliquid"
+        | "alpha-arcade"
+        | "prophetx"
+        | "limitless";
 }

@@ -7,8 +7,8 @@ import type * as serializers from "../index.js";
 export const CanonicalSportsSourceMarketProvider: core.serialization.Schema<
     serializers.CanonicalSportsSourceMarketProvider.Raw,
     PredictorSDK.CanonicalSportsSourceMarketProvider
-> = core.serialization.enum_(["kalshi", "polymarket", "predict", "sxbet", "alpha-arcade"]);
+> = core.serialization.enum_(["kalshi", "polymarket", "predict", "sxbet", "alpha-arcade", "prophetx"]);
 
 export declare namespace CanonicalSportsSourceMarketProvider {
-    export type Raw = "kalshi" | "polymarket" | "predict" | "sxbet" | "alpha-arcade";
+    export type Raw = "kalshi" | "polymarket" | "predict" | "sxbet" | "alpha-arcade" | "prophetx";
 }

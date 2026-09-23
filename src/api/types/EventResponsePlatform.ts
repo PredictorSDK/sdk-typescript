@@ -8,5 +8,7 @@ export const EventResponsePlatform = {
     Sxbet: "sxbet",
     Hyperliquid: "hyperliquid",
     AlphaArcade: "alpha-arcade",
+    Prophetx: "prophetx",
+    Limitless: "limitless",
 } as const;
 export type EventResponsePlatform = (typeof EventResponsePlatform)[keyof typeof EventResponsePlatform];

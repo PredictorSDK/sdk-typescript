@@ -6,6 +6,7 @@ export const CanonicalSportsSourceMarketProvider = {
     Predict: "predict",
     Sxbet: "sxbet",
     AlphaArcade: "alpha-arcade",
+    Prophetx: "prophetx",
 } as const;
 export type CanonicalSportsSourceMarketProvider =
     (typeof CanonicalSportsSourceMarketProvider)[keyof typeof CanonicalSportsSourceMarketProvider];

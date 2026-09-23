@@ -7,5 +7,7 @@ export const GetMarketsRequestProvider = {
     Sxbet: "sxbet",
     Hyperliquid: "hyperliquid",
     AlphaArcade: "alpha-arcade",
+    Prophetx: "prophetx",
+    Limitless: "limitless",
 } as const;
 export type GetMarketsRequestProvider = (typeof GetMarketsRequestProvider)[keyof typeof GetMarketsRequestProvider];

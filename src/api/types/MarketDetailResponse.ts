@@ -3,14 +3,14 @@
 import type * as PredictorSDK from "../index.js";
 
 /**
- * Single-market detail across all six supported platforms. Identity fields are strict-universal (no second fetch on any platform); the pricing tier carries per-outcome quotes plus market-level aggregates with explicit nulls where a platform doesn't natively expose a figure — values are never fabricated. The trading_fees tier applies the same rule to the venue's own published fee parameters. closes_at/event_id remain deliberately omitted, see the endpoint description for the rationale.
+ * Single-market detail across all eight supported platforms. Identity fields are strict-universal (no second fetch on any platform); the pricing tier carries per-outcome quotes plus market-level aggregates with explicit nulls where a platform doesn't natively expose a figure — values are never fabricated. The trading_fees tier applies the same rule to the venue's own published fee parameters. closes_at/event_id remain deliberately omitted, see the endpoint description for the rationale.
  */
 export interface MarketDetailResponse {
     /** Composite market identifier in the format `{provider}:{provider_id}`. Matches the `id` field returned by `GET /v1/markets` so list output flows into detail lookups without preprocessing. */
     id: string;
     /** Prediction market provider the market_id resolved against. */
     provider: PredictorSDK.MarketDetailResponseProvider;
-    /** Platform-native market identifier. Kalshi ticker, Polymarket numeric id, Predict numeric id, SX Bet `marketHash`, or Hyperliquid outcome id. For Polymarket markets resolved by slug, this is normalized to the numeric id. Hyperliquid integer ids collide with Polymarket/Predict numeric ids, so look them up via the composite id (`hyperliquid:<id>`, as returned by `/v1/markets`) or `?platform=hyperliquid`. */
+    /** Platform-native market identifier. Kalshi ticker, Polymarket numeric id, Predict numeric id, SX Bet `marketHash`, Hyperliquid outcome id, AlphaArcade market ULID, ProphetX `<event_id>:<market_id>` (resolving the favourite primary-line strike), or Limitless slug. For Polymarket markets resolved by slug, this is normalized to the numeric id. Hyperliquid integer ids collide with Polymarket/Predict numeric ids, so look them up via the composite id (`hyperliquid:<id>`, as returned by `/v1/markets`) or `?platform=hyperliquid`. Limitless slugs collide with Polymarket/Predict slugs, so look them up via the composite id (`limitless:<slug>`) or `?platform=limitless`. */
     providerId: string;
     /** Human-readable market title. Each platform exposes a slightly different field — Kalshi `title`, Polymarket `question`, Predict `title`, SX Bet composed from outcome labels (team-pair fallback) so a game's moneyline, spread, and total markets stay distinguishable, and Hyperliquid composed from outcome/question metadata. */
     title: string;

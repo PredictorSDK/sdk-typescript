@@ -5,7 +5,7 @@ import type * as PredictorSDK from "../index.js";
 /**
  * The trading fee the PREDICTION MARKET charges on a trade in this market — the venue's own published parameters, normalized. This has nothing to do with PredictorSDK's subscription pricing.
  *
- * Always present on the response. Every published model across the six platforms is a per-share fee times the traded share count, and only the price term differs, so `taker.model` plus its parameters expresses each venue exactly rather than approximating any of them. Compute the fee yourself:
+ * Always present on the response. Every published model across the eight platforms is a per-share fee times the traded share count, and only the price term differs, so `taker.model` plus its parameters expresses each venue exactly rather than approximating any of them — except Limitless, whose taker curve is published as table rows with no closed form: its descriptor reports `partial` with a null taker leg instead of inventing a number. (A Limitless market with fees disabled reports `published` with both legs zero — an asserted free, never an unknown.) Compute the fee yourself:
  *
  * `fee = shares × f(price)`, then apply `rounding`, where `f` is
  *

@@ -4,7 +4,7 @@ import type * as PredictorSDK from "../index.js";
 
 export interface PlatformMarket {
     platform: PredictorSDK.PlatformMarketPlatform;
-    /** Provider-native parent event or fixture identifier for the path in `GET /v1/events/{event_id}`. Kalshi uses its event ticker, Polymarket its event slug (or numeric event ID fallback), Predict its market ID, SX Bet its `L...` fixture ID, and AlphaArcade its parent market ULID. Always pair it with the events endpoint's `platform` query parameter, passing this row's `platform` value (matched case-insensitively). Predict market IDs and AlphaArcade ULIDs are not shape-distinguishable from Polymarket identifiers, so without that override the events endpoint probes Polymarket first and can answer `200` with an unrelated Polymarket event instead of `404`. Retained snapshots created before this field was introduced may omit it. */
+    /** Provider-native parent event or fixture identifier for the path in `GET /v1/events/{event_id}`. Kalshi uses its event ticker, Polymarket its event slug (or numeric event ID fallback), Predict its market ID, SX Bet its `L...` fixture ID, AlphaArcade its parent market ULID, and ProphetX its integer event id. Always pair it with the events endpoint's `platform` query parameter, passing this row's `platform` value (matched case-insensitively). Without that override, ambiguous identifiers probe only Polymarket and Predict: two hits return `409`, one hit returns that provider's event, and no hits return `404`. AlphaArcade and ProphetX are never probed or inferred; their native IDs require the override or a provider-prefixed composite ID to reach the correct venue. Retained snapshots created before this field was introduced may omit it. */
     eventId?: string;
     /** Kalshi event ticker. Present when platform is KALSHI. */
     eventTicker?: string;
@@ -16,6 +16,6 @@ export interface PlatformMarket {
     tokenIds?: string[];
     /** Source market ID. Present for platforms other than Kalshi and Polymarket. */
     marketId?: string;
-    /** Source outcome IDs for the market named by `market_id`, sorted and de-duplicated. These are the same values `GET /v1/markets/{market_id}` returns as `outcomes[].outcome_id`, so they join directly. SX Bet's are `outcomeOne`/`outcomeTwo` — market-scoped, because SX Bet publishes no per-outcome token; read them together with `market_id`. Present for platforms that use outcome IDs. */
+    /** Source outcome IDs for the market named by `market_id`, sorted and de-duplicated. These are the same values `GET /v1/markets/{market_id}` returns as `outcomes[].outcome_id`, so they join directly. SX Bet's are `outcomeOne`/`outcomeTwo` — market-scoped, because SX Bet publishes no per-outcome token; read them together with `market_id`. ProphetX's are small integers (`4`, `5`) that are likewise market-scoped. Present for platforms that use outcome IDs. */
     outcomeIds?: string[];
 }

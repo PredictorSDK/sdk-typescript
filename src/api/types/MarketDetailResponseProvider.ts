@@ -8,6 +8,8 @@ export const MarketDetailResponseProvider = {
     Sxbet: "sxbet",
     Hyperliquid: "hyperliquid",
     AlphaArcade: "alpha-arcade",
+    Prophetx: "prophetx",
+    Limitless: "limitless",
 } as const;
 export type MarketDetailResponseProvider =
     (typeof MarketDetailResponseProvider)[keyof typeof MarketDetailResponseProvider];

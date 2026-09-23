@@ -3,6 +3,10 @@
 import type * as PredictorSDK from "../index.js";
 
 export interface CanonicalSportsSubmarket {
+    /** Player props only. `equivalent` requires a complete reviewed profile for every source contract; `different` means at least one known payout-rule difference, even if other rules are unknown; `unverified` means equivalence has not been established and no known difference was found. Absence on game lines makes no claim about their full settlement equivalence. */
+    settlementEquivalence?: PredictorSDK.CanonicalSportsSubmarketSettlementEquivalence;
+    /** Player props only. A deterministic matrix covering all nine settlement dimensions. Filter rows with `comparison=different` for known differences and `comparison=unverified` for gaps. Row-level agreement is not a complete contract review. Source values reference individual native market IDs, not venue-wide defaults. Evidence describes captured source clauses; additional unreviewed terms can apply. No prices or payout estimates. */
+    ruleComparisons?: PredictorSDK.PlayerPropRuleComparison[];
     /** Stable canonical submarket key within the event. */
     key: string;
     marketType: string;

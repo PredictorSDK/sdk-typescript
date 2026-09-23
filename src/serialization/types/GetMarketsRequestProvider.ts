@@ -7,8 +7,25 @@ import type * as serializers from "../index.js";
 export const GetMarketsRequestProvider: core.serialization.Schema<
     serializers.GetMarketsRequestProvider.Raw,
     PredictorSDK.GetMarketsRequestProvider
-> = core.serialization.enum_(["kalshi", "polymarket", "predict", "sxbet", "hyperliquid", "alpha-arcade"]);
+> = core.serialization.enum_([
+    "kalshi",
+    "polymarket",
+    "predict",
+    "sxbet",
+    "hyperliquid",
+    "alpha-arcade",
+    "prophetx",
+    "limitless",
+]);
 
 export declare namespace GetMarketsRequestProvider {
-    export type Raw = "kalshi" | "polymarket" | "predict" | "sxbet" | "hyperliquid" | "alpha-arcade";
+    export type Raw =
+        | "kalshi"
+        | "polymarket"
+        | "predict"
+        | "sxbet"
+        | "hyperliquid"
+        | "alpha-arcade"
+        | "prophetx"
+        | "limitless";
 }

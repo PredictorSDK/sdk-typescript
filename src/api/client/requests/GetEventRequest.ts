@@ -10,7 +10,7 @@ import type * as PredictorSDK from "../../index.js";
  */
 export interface GetEventRequest {
     /**
-     * Platform-native event identifier. Examples per platform: Kalshi event ticker (`KXNBAGAME-26OCT20OKCSAS`), Polymarket event slug (`mlb-tor-cle-2026-09-02`), SX Bet event id (`L19766755`), Predict market id (`1607914`), Hyperliquid question or outcome integer id (requires `?platform=hyperliquid` since integer ids aren't inferred). The composite `{provider}:{native_id}` form (e.g. `predict:1607914`) is accepted here too and dispatches without probing.
+     * Platform-native event identifier. Examples per platform: Kalshi event ticker (`KXNBAGAME-26OCT20OKCSAS`), Polymarket event slug (`nfl-pit-ne-2026-09-20`), SX Bet event id (`L19766755`), Predict market id (`1607914`), Hyperliquid question or outcome integer id (requires `?platform=hyperliquid` since integer ids aren't inferred). The composite `{provider}:{native_id}` form (e.g. `predict:1607914`) is accepted here too and dispatches without probing.
      *
      * **A bare numeric id or slug is not unique across platforms.** Polymarket and Predict both use these shapes and their id spaces overlap, so sending one without a platform can fail with `409` (see that response). Pass `?platform=` — every row of `GET /v1/matching-markets/sports` carries the `platform` that goes with its `event_id`.
      *

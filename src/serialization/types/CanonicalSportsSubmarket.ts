@@ -7,11 +7,21 @@ import { CanonicalSportsOutcome } from "./CanonicalSportsOutcome.js";
 import { CanonicalSportsRules } from "./CanonicalSportsRules.js";
 import { CanonicalSportsSourceMarket } from "./CanonicalSportsSourceMarket.js";
 import { CanonicalSportsSubject } from "./CanonicalSportsSubject.js";
+import { CanonicalSportsSubmarketSettlementEquivalence } from "./CanonicalSportsSubmarketSettlementEquivalence.js";
+import { PlayerPropRuleComparison } from "./PlayerPropRuleComparison.js";
 
 export const CanonicalSportsSubmarket: core.serialization.ObjectSchema<
     serializers.CanonicalSportsSubmarket.Raw,
     PredictorSDK.CanonicalSportsSubmarket
 > = core.serialization.object({
+    settlementEquivalence: core.serialization.property(
+        "settlement_equivalence",
+        CanonicalSportsSubmarketSettlementEquivalence.optional(),
+    ),
+    ruleComparisons: core.serialization.property(
+        "rule_comparisons",
+        core.serialization.list(PlayerPropRuleComparison).optional(),
+    ),
     key: core.serialization.string(),
     marketType: core.serialization.property("market_type", core.serialization.string()),
     segment: core.serialization.string(),
@@ -26,6 +36,8 @@ export const CanonicalSportsSubmarket: core.serialization.ObjectSchema<
 
 export declare namespace CanonicalSportsSubmarket {
     export interface Raw {
+        settlement_equivalence?: CanonicalSportsSubmarketSettlementEquivalence.Raw | null;
+        rule_comparisons?: PlayerPropRuleComparison.Raw[] | null;
         key: string;
         market_type: string;
         segment: string;

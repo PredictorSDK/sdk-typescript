@@ -7,8 +7,25 @@ import type * as serializers from "../index.js";
 export const GetEventRequestPlatform: core.serialization.Schema<
     serializers.GetEventRequestPlatform.Raw,
     PredictorSDK.GetEventRequestPlatform
-> = core.serialization.enum_(["kalshi", "polymarket", "predict", "sxbet", "hyperliquid", "alpha-arcade"]);
+> = core.serialization.enum_([
+    "kalshi",
+    "polymarket",
+    "predict",
+    "sxbet",
+    "hyperliquid",
+    "alpha-arcade",
+    "prophetx",
+    "limitless",
+]);
 
 export declare namespace GetEventRequestPlatform {
-    export type Raw = "kalshi" | "polymarket" | "predict" | "sxbet" | "hyperliquid" | "alpha-arcade";
+    export type Raw =
+        | "kalshi"
+        | "polymarket"
+        | "predict"
+        | "sxbet"
+        | "hyperliquid"
+        | "alpha-arcade"
+        | "prophetx"
+        | "limitless";
 }
