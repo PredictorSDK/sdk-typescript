@@ -9,5 +9,6 @@ export const GetEventRequestPlatform = {
     AlphaArcade: "alpha-arcade",
     Prophetx: "prophetx",
     Limitless: "limitless",
+    Pred: "pred",
 } as const;
 export type GetEventRequestPlatform = (typeof GetEventRequestPlatform)[keyof typeof GetEventRequestPlatform];

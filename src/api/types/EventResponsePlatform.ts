@@ -10,5 +10,6 @@ export const EventResponsePlatform = {
     AlphaArcade: "alpha-arcade",
     Prophetx: "prophetx",
     Limitless: "limitless",
+    Pred: "pred",
 } as const;
 export type EventResponsePlatform = (typeof EventResponsePlatform)[keyof typeof EventResponsePlatform];

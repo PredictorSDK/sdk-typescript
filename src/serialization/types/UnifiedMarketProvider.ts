@@ -16,6 +16,7 @@ export const UnifiedMarketProvider: core.serialization.Schema<
     "alpha-arcade",
     "prophetx",
     "limitless",
+    "pred",
 ]);
 
 export declare namespace UnifiedMarketProvider {
@@ -27,5 +28,6 @@ export declare namespace UnifiedMarketProvider {
         | "hyperliquid"
         | "alpha-arcade"
         | "prophetx"
-        | "limitless";
+        | "limitless"
+        | "pred";
 }

@@ -16,6 +16,7 @@ export const GetMarketRequestPlatform: core.serialization.Schema<
     "alpha-arcade",
     "prophetx",
     "limitless",
+    "pred",
 ]);
 
 export declare namespace GetMarketRequestPlatform {
@@ -27,5 +28,6 @@ export declare namespace GetMarketRequestPlatform {
         | "hyperliquid"
         | "alpha-arcade"
         | "prophetx"
-        | "limitless";
+        | "limitless"
+        | "pred";
 }

@@ -16,6 +16,7 @@ export const MarketDetailResponseProvider: core.serialization.Schema<
     "alpha-arcade",
     "prophetx",
     "limitless",
+    "pred",
 ]);
 
 export declare namespace MarketDetailResponseProvider {
@@ -27,5 +28,6 @@ export declare namespace MarketDetailResponseProvider {
         | "hyperliquid"
         | "alpha-arcade"
         | "prophetx"
-        | "limitless";
+        | "limitless"
+        | "pred";
 }

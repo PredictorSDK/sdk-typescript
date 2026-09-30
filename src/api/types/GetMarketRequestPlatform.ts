@@ -9,5 +9,6 @@ export const GetMarketRequestPlatform = {
     AlphaArcade: "alpha-arcade",
     Prophetx: "prophetx",
     Limitless: "limitless",
+    Pred: "pred",
 } as const;
 export type GetMarketRequestPlatform = (typeof GetMarketRequestPlatform)[keyof typeof GetMarketRequestPlatform];

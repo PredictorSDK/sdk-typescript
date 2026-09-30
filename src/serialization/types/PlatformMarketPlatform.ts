@@ -7,8 +7,8 @@ import type * as serializers from "../index.js";
 export const PlatformMarketPlatform: core.serialization.Schema<
     serializers.PlatformMarketPlatform.Raw,
     PredictorSDK.PlatformMarketPlatform
-> = core.serialization.enum_(["KALSHI", "POLYMARKET", "PREDICT", "SXBET", "ALPHA-ARCADE", "PROPHETX"]);
+> = core.serialization.enum_(["KALSHI", "POLYMARKET", "PREDICT", "SXBET", "ALPHA-ARCADE", "PROPHETX", "PRED"]);
 
 export declare namespace PlatformMarketPlatform {
-    export type Raw = "KALSHI" | "POLYMARKET" | "PREDICT" | "SXBET" | "ALPHA-ARCADE" | "PROPHETX";
+    export type Raw = "KALSHI" | "POLYMARKET" | "PREDICT" | "SXBET" | "ALPHA-ARCADE" | "PROPHETX" | "PRED";
 }

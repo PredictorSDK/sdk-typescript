@@ -39,4 +39,6 @@ export interface GetSportsMatchingMarketsRequest {
     prophetxEventId?: string | string[];
     /** ProphetX market ID(s) to find matching markets for (e.g. `1700008782:219`, resolving the favourite primary-line strike). Accepts a market ID or an event ID (mirroring how `kalshi_event_ticker` accepts market tickers). Provide the parameter multiple times for multiple IDs, up to 100 unique values. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
     prophetxMarketId?: string | string[];
+    /** Pred market ID(s) to find matching markets for, in native form (no `pred:` prefix): the `<parent_market_id>:<child_market_id>` pair a `PRED` row publishes as `market_id`, or a bare parent market ID — the row's `event_id`, which Pred itself calls `parent_market_id` and `GET /v1/markets/pred:<parent>` also accepts. Both halves are `0x` + 64 hex. Provide the parameter multiple times for multiple IDs, up to 100 unique values. Only one filter type may be used per request. Lookup mode — pagination parameters are ignored. */
+    predMarketId?: string | string[];
 }

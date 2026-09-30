@@ -7,5 +7,6 @@ export const PlatformMarketPlatform = {
     Sxbet: "SXBET",
     AlphaArcade: "ALPHA-ARCADE",
     Prophetx: "PROPHETX",
+    Pred: "PRED",
 } as const;
 export type PlatformMarketPlatform = (typeof PlatformMarketPlatform)[keyof typeof PlatformMarketPlatform];

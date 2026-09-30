@@ -9,5 +9,6 @@ export const GetMarketsRequestProvider = {
     AlphaArcade: "alpha-arcade",
     Prophetx: "prophetx",
     Limitless: "limitless",
+    Pred: "pred",
 } as const;
 export type GetMarketsRequestProvider = (typeof GetMarketsRequestProvider)[keyof typeof GetMarketsRequestProvider];

@@ -8,7 +8,7 @@ import type * as PredictorSDK from "../index.js";
  * Kalshi additionally charges a per-fill rounding fee that restores the member's balance precision ($0.01 for non-direct members, $0.0001 for direct), offset by a rebate once accumulated rounding exceeds $0.01. That depends on fill fragmentation and member type, so it is not predictable pre-trade and is deliberately not modeled here — expect a small positive difference between the figure you compute and the figure Kalshi charges across many partial fills.
  */
 export interface MarketDetailFeeRounding {
-    /** `up` — the venue rounds the fee UP to the next increment (Kalshi ceils to $0.0001; AlphaArcade ceils to 1e-6 USDC). `nearest` — the venue rounds to the nearest increment (Polymarket rounds to 5 decimal places, with 0.00001 USDC the smallest fee charged). */
+    /** `up` — the venue rounds the fee UP to the next increment (Kalshi ceils to $0.0001; AlphaArcade ceils to 1e-6 USDC). `nearest` — the venue rounds to the nearest increment (Polymarket rounds to 5 decimal places, with 0.00001 USDC the smallest fee charged). `down` — the venue truncates the fee to the increment (Pred computes in 6-decimal base units and always rounds down; a fee below the smallest chargeable unit — 0.000001 — is zero, not clamped up to it). */
     direction: PredictorSDK.MarketDetailFeeRoundingDirection;
     /** The rounding increment in the market's quote currency. */
     increment: number;

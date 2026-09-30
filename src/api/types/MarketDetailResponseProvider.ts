@@ -10,6 +10,7 @@ export const MarketDetailResponseProvider = {
     AlphaArcade: "alpha-arcade",
     Prophetx: "prophetx",
     Limitless: "limitless",
+    Pred: "pred",
 } as const;
 export type MarketDetailResponseProvider =
     (typeof MarketDetailResponseProvider)[keyof typeof MarketDetailResponseProvider];

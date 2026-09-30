@@ -7,8 +7,8 @@ import type * as serializers from "../index.js";
 export const MarketDetailFeeRoundingDirection: core.serialization.Schema<
     serializers.MarketDetailFeeRoundingDirection.Raw,
     PredictorSDK.MarketDetailFeeRoundingDirection
-> = core.serialization.enum_(["up", "nearest"]);
+> = core.serialization.enum_(["up", "nearest", "down"]);
 
 export declare namespace MarketDetailFeeRoundingDirection {
-    export type Raw = "up" | "nearest";
+    export type Raw = "up" | "nearest" | "down";
 }

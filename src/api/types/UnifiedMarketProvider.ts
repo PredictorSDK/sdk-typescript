@@ -10,5 +10,6 @@ export const UnifiedMarketProvider = {
     AlphaArcade: "alpha-arcade",
     Prophetx: "prophetx",
     Limitless: "limitless",
+    Pred: "pred",
 } as const;
 export type UnifiedMarketProvider = (typeof UnifiedMarketProvider)[keyof typeof UnifiedMarketProvider];

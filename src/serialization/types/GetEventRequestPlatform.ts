@@ -16,6 +16,7 @@ export const GetEventRequestPlatform: core.serialization.Schema<
     "alpha-arcade",
     "prophetx",
     "limitless",
+    "pred",
 ]);
 
 export declare namespace GetEventRequestPlatform {
@@ -27,5 +28,6 @@ export declare namespace GetEventRequestPlatform {
         | "hyperliquid"
         | "alpha-arcade"
         | "prophetx"
-        | "limitless";
+        | "limitless"
+        | "pred";
 }
