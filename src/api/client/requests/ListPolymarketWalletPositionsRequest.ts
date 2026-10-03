@@ -11,8 +11,8 @@ export interface ListPolymarketWalletPositionsRequest {
     address?: string;
     /** Polymarket display name to resolve to a proxy wallet. Match is case-insensitive and exact against the user's stored `name`. A leading `@` is accepted and stripped. Mutually exclusive with `address`. */
     username?: string;
-    /** Number of items per page. Defaults to 50. */
+    /** Number of items requested for the first page. Defaults to 50. Once a cursor is supplied, the cursor's page size is used. */
     limit?: number;
-    /** Opaque cursor from a previous response's `pagination.next_cursor`. Bound to the resolved wallet address — replaying a cursor against a different identifier returns `400`. */
+    /** Opaque cursor from a previous response's `pagination.next_cursor`. Bound to the resolved wallet address — replaying a cursor against a different wallet returns `400`. Cursors issued by the previous offset-based implementation are rejected; restart from the first page. A cursor cannot carry a page size above 100. */
     cursor?: string;
 }

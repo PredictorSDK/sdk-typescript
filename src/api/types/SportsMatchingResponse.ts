@@ -9,4 +9,6 @@ export interface SportsMatchingResponse {
     canonicalEvents?: Record<string, PredictorSDK.CanonicalSportsEvent>;
     /** Pagination metadata for the current page. Present in list mode (no platform-ID filter). Absent in lookup mode since the response is bounded by the filter. */
     pagination?: PredictorSDK.PaginationBlock;
+    /** Freshness of the matching snapshot this response was read from. Present in list and lookup mode alike. Describes the DATA; `pagination` describes the page. */
+    snapshot: PredictorSDK.SportsMatchingSnapshot;
 }

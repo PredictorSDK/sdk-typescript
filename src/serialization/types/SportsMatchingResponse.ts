@@ -6,6 +6,7 @@ import type * as serializers from "../index.js";
 import { CanonicalSportsEvent } from "./CanonicalSportsEvent.js";
 import { PaginationBlock } from "./PaginationBlock.js";
 import { PlatformMarket } from "./PlatformMarket.js";
+import { SportsMatchingSnapshot } from "./SportsMatchingSnapshot.js";
 
 export const SportsMatchingResponse: core.serialization.ObjectSchema<
     serializers.SportsMatchingResponse.Raw,
@@ -17,6 +18,7 @@ export const SportsMatchingResponse: core.serialization.ObjectSchema<
         core.serialization.record(core.serialization.string(), CanonicalSportsEvent).optional(),
     ),
     pagination: PaginationBlock.optional(),
+    snapshot: SportsMatchingSnapshot,
 });
 
 export declare namespace SportsMatchingResponse {
@@ -24,5 +26,6 @@ export declare namespace SportsMatchingResponse {
         markets: Record<string, PlatformMarket.Raw[]>;
         canonical_events?: Record<string, CanonicalSportsEvent.Raw> | null;
         pagination?: PaginationBlock.Raw | null;
+        snapshot: SportsMatchingSnapshot.Raw;
     }
 }

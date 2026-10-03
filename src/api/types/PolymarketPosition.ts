@@ -5,6 +5,6 @@ export interface PolymarketPosition {
     conditionId: string;
     /** Outcome label held in this position (`Yes`/`No` for binary markets). */
     outcome: string;
-    /** Number of outcome shares held. */
+    /** Current number of outcome shares held, not lifetime shares bought. */
     shares: number;
 }
