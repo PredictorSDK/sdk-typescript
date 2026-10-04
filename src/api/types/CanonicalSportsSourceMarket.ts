@@ -7,8 +7,8 @@ import type * as PredictorSDK from "../index.js";
  */
 export interface CanonicalSportsSourceMarket {
     provider: PredictorSDK.CanonicalSportsSourceMarketProvider;
-    /** The provider's own parent event for this market, for `GET /v1/events/{event_id}`: Kalshi's event ticker (a game's spread and total markets sit under events of their own), Polymarket's event slug, Predict's market ID, SX Bet's `L…` fixture ID, AlphaArcade's parent market ULID, ProphetX's integer event ID, or Pred's parent market ID. It names a parent, not this market, so it is not a `market_id`: a Kalshi event ticker answers `404` on market detail. Snapshots written before this field existed may omit it. */
-    eventId?: string;
+    /** The provider's own parent event for this market, for `GET /v1/events/{event_id}`: Kalshi's event ticker (a game's spread and total markets sit under events of their own), Polymarket's event slug, Predict's market ID, SX Bet's `L…` fixture ID, AlphaArcade's parent market ULID, ProphetX's integer event ID, or Pred's parent market ID. It names a parent, not this market, so it is not a `market_id`: a Kalshi event ticker answers `404` on market detail. */
+    eventId: string;
     /**
      * Exact provider-native market identifier. It resolves on `GET /v1/markets/{market_id}`, either as-is or prefixed with this row's `provider` in the composite form `{provider}:{market_id}`.
      *
@@ -16,7 +16,7 @@ export interface CanonicalSportsSourceMarket {
      */
     marketId: string;
     marketName?: string;
-    /** The venue's slug for this market, where it has one (Polymarket). `GET /v1/markets/{market_id}` accepts it in place of `market_id`. */
+    /** The venue's slug for this market, where it has one (Polymarket and AlphaArcade). `source_id` accepts it. For market detail send `market_id`, which works on every venue: `GET /v1/markets/{market_id}` also accepts a Polymarket slug, but not an AlphaArcade one. */
     marketSlug?: string;
     outcomes: PredictorSDK.CanonicalSportsSourceOutcome[];
 }

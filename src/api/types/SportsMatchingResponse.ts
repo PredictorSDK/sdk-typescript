@@ -3,7 +3,7 @@
 import type * as PredictorSDK from "../index.js";
 
 export interface SportsMatchingResponse {
-    /** Matched events. Keyed by canonical event ID in list mode, and in lookup mode by each `event_id` or `source_id` exactly as sent (surrounding whitespace trimmed), so an identifier that matched nothing is simply absent. Present on every response, as `{}` when nothing matched. */
+    /** Matched events. Keyed by canonical event ID in list mode, and in lookup mode by each `event_id` or `source_id` as sent (whitespace around the provider and ID trimmed; matching itself is case-insensitive), so an identifier that matched nothing is simply absent. Present on every response, as `{}` when nothing matched. */
     canonicalEvents: Record<string, PredictorSDK.CanonicalSportsEvent>;
     /** Pagination metadata for the current page. Present in list mode (no `event_id` or `source_id`). Absent in lookup mode, since the response is bounded by the identifiers requested. */
     pagination?: PredictorSDK.PaginationBlock;
