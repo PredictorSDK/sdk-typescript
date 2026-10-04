@@ -11,6 +11,7 @@ export const CanonicalSportsSourceMarket: core.serialization.ObjectSchema<
     PredictorSDK.CanonicalSportsSourceMarket
 > = core.serialization.object({
     provider: CanonicalSportsSourceMarketProvider,
+    eventId: core.serialization.property("event_id", core.serialization.string().optional()),
     marketId: core.serialization.property("market_id", core.serialization.string()),
     marketName: core.serialization.property("market_name", core.serialization.string().optional()),
     marketSlug: core.serialization.property("market_slug", core.serialization.string().optional()),
@@ -20,6 +21,7 @@ export const CanonicalSportsSourceMarket: core.serialization.ObjectSchema<
 export declare namespace CanonicalSportsSourceMarket {
     export interface Raw {
         provider: CanonicalSportsSourceMarketProvider.Raw;
+        event_id?: string | null;
         market_id: string;
         market_name?: string | null;
         market_slug?: string | null;

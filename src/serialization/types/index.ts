@@ -48,8 +48,6 @@ export * from "./PaymentRequiredErrorAction.js";
 export * from "./PaymentRequiredErrorBody.js";
 export * from "./Plan.js";
 export * from "./PlansResponse.js";
-export * from "./PlatformMarket.js";
-export * from "./PlatformMarketPlatform.js";
 export * from "./PlayerPropRuleComparison.js";
 export * from "./PlayerPropRuleComparisonComparison.js";
 export * from "./PlayerPropRuleComparisonRule.js";

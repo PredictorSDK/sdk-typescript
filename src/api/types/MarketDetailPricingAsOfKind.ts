@@ -3,13 +3,13 @@
 /**
  * What `as_of` MEASURES on this provider, so one consumer code path can bound freshness tightly where the value is a quote time and refuse to pretend where it is not. Always present; `unknown` whenever `as_of` is null, never an empty string.
  *
- * `quote` — the stamp advances when the quote advances, so an age bound on it is meaningful. Hyperliquid (`l2Book` server time) and SX Bet's V2 best-odds path. How TIGHT that bound can be still depends on the venue: Hyperliquid's tracks wall clock to the second, while SX Bet's marks when the resting top-of-book order was posted and is legitimately tens of minutes old on a thin book. Size the threshold to the venue's liquidity; a blanket seconds-scale bound rejects most of SX Bet.
+ * `quote` — the stamp advances when the quote advances, so an age bound on it is meaningful. Hyperliquid (`l2Book` server time), ProphetX (the best offer's `updated_at`) and Pred (the book's `last_updated_at`). How TIGHT that bound can be still depends on the venue: Hyperliquid's tracks wall clock to the second, while ProphetX's describes the resting best offer and is legitimately hours or days old on a thin book. Size the threshold to the venue's liquidity; a blanket seconds-scale bound rejects most of ProphetX.
  *
  * `record_refresh` — the stamp advances on a periodic rewrite of the provider's record, independent of whether the quote moved. Bounds RECORD age (minutes), not quote age. Polymarket.
  *
  * `record_static` — the stamp does not advance while the market is actively quoted, so it bounds nothing at any threshold. Kalshi. Treat quote freshness as unknown here and do not gate on `as_of`; bound `observed_at` instead and take executable price from the venue's own book.
  *
- * `unknown` — `as_of` is null: the record carries no timestamp of any kind (Predict, AlphaArcade, SX Bet V3). Kept distinct from `record_static` because the underlying fact differs even though the consumer's action does not.
+ * `unknown` — `as_of` is null: the record carries no timestamp of any kind (Predict, AlphaArcade, SX Bet). Kept distinct from `record_static` because the underlying fact differs even though the consumer's action does not.
  */
 export const MarketDetailPricingAsOfKind = {
     Quote: "quote",
