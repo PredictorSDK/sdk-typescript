@@ -25,8 +25,8 @@ export const CanonicalSportsSubmarket: core.serialization.ObjectSchema<
     key: core.serialization.string(),
     marketType: core.serialization.property("market_type", core.serialization.string()),
     segment: core.serialization.string(),
-    displayName: core.serialization.property("display_name", core.serialization.string().optional()),
-    metric: core.serialization.string().optional(),
+    displayName: core.serialization.property("display_name", core.serialization.string()),
+    metric: core.serialization.string(),
     line: core.serialization.number().optional(),
     subject: CanonicalSportsSubject.optional(),
     rules: CanonicalSportsRules.optional(),
@@ -41,8 +41,8 @@ export declare namespace CanonicalSportsSubmarket {
         key: string;
         market_type: string;
         segment: string;
-        display_name?: string | null;
-        metric?: string | null;
+        display_name: string;
+        metric: string;
         line?: number | null;
         subject?: CanonicalSportsSubject.Raw | null;
         rules?: CanonicalSportsRules.Raw | null;

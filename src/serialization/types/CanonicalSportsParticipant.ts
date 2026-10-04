@@ -9,14 +9,14 @@ export const CanonicalSportsParticipant: core.serialization.ObjectSchema<
     PredictorSDK.CanonicalSportsParticipant
 > = core.serialization.object({
     key: core.serialization.string(),
-    name: core.serialization.string().optional(),
-    role: core.serialization.string().optional(),
+    name: core.serialization.string(),
+    role: core.serialization.string(),
 });
 
 export declare namespace CanonicalSportsParticipant {
     export interface Raw {
         key: string;
-        name?: string | null;
-        role?: string | null;
+        name: string;
+        role: string;
     }
 }

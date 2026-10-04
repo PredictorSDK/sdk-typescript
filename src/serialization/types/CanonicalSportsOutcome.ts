@@ -10,15 +10,15 @@ export const CanonicalSportsOutcome: core.serialization.ObjectSchema<
 > = core.serialization.object({
     key: core.serialization.string(),
     label: core.serialization.string(),
-    type: core.serialization.string().optional(),
-    side: core.serialization.string().optional(),
+    type: core.serialization.string(),
+    side: core.serialization.string(),
 });
 
 export declare namespace CanonicalSportsOutcome {
     export interface Raw {
         key: string;
         label: string;
-        type?: string | null;
-        side?: string | null;
+        type: string;
+        side: string;
     }
 }

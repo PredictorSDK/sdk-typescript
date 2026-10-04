@@ -55,6 +55,7 @@ export * from "./PlayerPropRuleSourceValue.js";
 export * from "./PolymarketPosition.js";
 export * from "./PolymarketPositionsResponse.js";
 export * from "./PolymarketWalletResponse.js";
+export * from "./SportsMatchingLookup.js";
 export * from "./SportsMatchingResponse.js";
 export * from "./SportsMatchingSnapshot.js";
 export * from "./UnifiedMarket.js";

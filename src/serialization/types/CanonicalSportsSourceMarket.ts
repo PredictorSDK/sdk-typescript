@@ -13,7 +13,7 @@ export const CanonicalSportsSourceMarket: core.serialization.ObjectSchema<
     provider: CanonicalSportsSourceMarketProvider,
     eventId: core.serialization.property("event_id", core.serialization.string()),
     marketId: core.serialization.property("market_id", core.serialization.string()),
-    marketName: core.serialization.property("market_name", core.serialization.string().optional()),
+    marketName: core.serialization.property("market_name", core.serialization.string()),
     marketSlug: core.serialization.property("market_slug", core.serialization.string().optional()),
     outcomes: core.serialization.list(CanonicalSportsSourceOutcome),
 });
@@ -23,7 +23,7 @@ export declare namespace CanonicalSportsSourceMarket {
         provider: CanonicalSportsSourceMarketProvider.Raw;
         event_id: string;
         market_id: string;
-        market_name?: string | null;
+        market_name: string;
         market_slug?: string | null;
         outcomes: CanonicalSportsSourceOutcome.Raw[];
     }

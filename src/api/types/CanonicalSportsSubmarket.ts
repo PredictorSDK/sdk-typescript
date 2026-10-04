@@ -11,8 +11,8 @@ export interface CanonicalSportsSubmarket {
     key: string;
     marketType: string;
     segment: string;
-    displayName?: string;
-    metric?: string;
+    displayName: string;
+    metric: string;
     /** Unsigned threshold for totals and player props; signed handicap for spreads. Omitted for moneyline markets. */
     line?: number;
     /** Participant or player whose line is represented. Present for subject-owned markets such as spreads and player props; omitted for event-owned moneylines and totals. */

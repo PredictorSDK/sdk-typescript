@@ -5,23 +5,23 @@ import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 import { CanonicalSportsEvent } from "./CanonicalSportsEvent.js";
 import { PaginationBlock } from "./PaginationBlock.js";
+import { SportsMatchingLookup } from "./SportsMatchingLookup.js";
 import { SportsMatchingSnapshot } from "./SportsMatchingSnapshot.js";
 
 export const SportsMatchingResponse: core.serialization.ObjectSchema<
     serializers.SportsMatchingResponse.Raw,
     PredictorSDK.SportsMatchingResponse
 > = core.serialization.object({
-    canonicalEvents: core.serialization.property(
-        "canonical_events",
-        core.serialization.record(core.serialization.string(), CanonicalSportsEvent),
-    ),
+    data: core.serialization.list(CanonicalSportsEvent),
+    lookups: core.serialization.record(core.serialization.string(), SportsMatchingLookup).optional(),
     pagination: PaginationBlock.optional(),
     snapshot: SportsMatchingSnapshot,
 });
 
 export declare namespace SportsMatchingResponse {
     export interface Raw {
-        canonical_events: Record<string, CanonicalSportsEvent.Raw>;
+        data: CanonicalSportsEvent.Raw[];
+        lookups?: Record<string, SportsMatchingLookup.Raw> | null;
         pagination?: PaginationBlock.Raw | null;
         snapshot: SportsMatchingSnapshot.Raw;
     }

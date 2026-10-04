@@ -9,16 +9,16 @@ export const CanonicalSportsSourceOutcome: core.serialization.ObjectSchema<
     PredictorSDK.CanonicalSportsSourceOutcome
 > = core.serialization.object({
     canonicalOutcomeKey: core.serialization.property("canonical_outcome_key", core.serialization.string()),
-    label: core.serialization.string().optional(),
-    outcomeId: core.serialization.property("outcome_id", core.serialization.string().optional()),
+    label: core.serialization.string(),
+    outcomeId: core.serialization.property("outcome_id", core.serialization.string()),
     side: core.serialization.string().optional(),
 });
 
 export declare namespace CanonicalSportsSourceOutcome {
     export interface Raw {
         canonical_outcome_key: string;
-        label?: string | null;
-        outcome_id?: string | null;
+        label: string;
+        outcome_id: string;
         side?: string | null;
     }
 }

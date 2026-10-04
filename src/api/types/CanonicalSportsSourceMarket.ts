@@ -10,12 +10,13 @@ export interface CanonicalSportsSourceMarket {
     /** The provider's own parent event for this market, for `GET /v1/events/{event_id}`: Kalshi's event ticker (a game's spread and total markets sit under events of their own), Polymarket's event slug, Predict's market ID, SX Bet's `L…` fixture ID, AlphaArcade's parent market ULID, ProphetX's integer event ID, or Pred's parent market ID. It names a parent, not this market, so it is not a `market_id`: a Kalshi event ticker answers `404` on market detail. */
     eventId: string;
     /**
-     * Exact provider-native market identifier. It resolves on `GET /v1/markets/{market_id}`, either as-is or prefixed with this row's `provider` in the composite form `{provider}:{market_id}`.
+     * Exact provider-native market identifier. It resolves on `GET /v1/markets/{market_id}`, either as-is or prefixed with this row's `provider` in the composite form `{provider}:{market_id}`. A ProphetX player prop's `market_id` names the line it was matched on, `<event_id>:<market_id>:<line>`: the pair alone resolves to whichever line ProphetX currently favours, and that moves before kickoff.
      *
      * One provider can contribute MORE THAN ONE entry to the same submarket, because a provider is free to model one canonical market as several native ones. Kalshi does exactly that for a game moneyline: it lists one binary market per team ("Arizona wins", "San Francisco wins"), so a Kalshi moneyline row appears twice, once per team ticker, each with its own `yes`/`no` outcomes. Group by `provider` if you need one row per venue; do not assume the list has at most one entry per provider.
      */
     marketId: string;
-    marketName?: string;
+    /** The market's title, as `GET /v1/markets/{market_id}` titles it. SX Bet's market record names only the game, so an SX Bet title is its two selection names (`Dallas Cowboys -6.5 vs Tampa Bay Buccaneers +6.5`). */
+    marketName: string;
     /** The venue's slug for this market, where it has one (Polymarket and AlphaArcade). `source_id` accepts it. For market detail send `market_id`, which works on every venue: `GET /v1/markets/{market_id}` also accepts a Polymarket slug, but not an AlphaArcade one. */
     marketSlug?: string;
     outcomes: PredictorSDK.CanonicalSportsSourceOutcome[];

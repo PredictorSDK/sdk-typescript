@@ -11,20 +11,20 @@ export const CanonicalSportsEvent: core.serialization.ObjectSchema<
     PredictorSDK.CanonicalSportsEvent
 > = core.serialization.object({
     eventId: core.serialization.property("event_id", core.serialization.string()),
-    sport: core.serialization.string().optional(),
-    league: core.serialization.string().optional(),
+    sport: core.serialization.string(),
+    league: core.serialization.string(),
     title: core.serialization.string(),
-    participants: core.serialization.list(CanonicalSportsParticipant).optional(),
+    participants: core.serialization.list(CanonicalSportsParticipant),
     submarkets: core.serialization.list(CanonicalSportsSubmarket),
 });
 
 export declare namespace CanonicalSportsEvent {
     export interface Raw {
         event_id: string;
-        sport?: string | null;
-        league?: string | null;
+        sport: string;
+        league: string;
         title: string;
-        participants?: CanonicalSportsParticipant.Raw[] | null;
+        participants: CanonicalSportsParticipant.Raw[];
         submarkets: CanonicalSportsSubmarket.Raw[];
     }
 }
