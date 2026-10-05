@@ -13,6 +13,7 @@ export * from "./CategoriesResponse.js";
 export * from "./CategoryInfo.js";
 export * from "./CryptoPriceItem.js";
 export * from "./CryptoPricesResponse.js";
+export * from "./ErrorParamProblem.js";
 export * from "./ErrorResponse.js";
 export * from "./EventFanout.js";
 export * from "./EventMarket.js";

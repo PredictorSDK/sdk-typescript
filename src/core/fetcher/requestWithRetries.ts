@@ -34,7 +34,8 @@ export function getRetryDelayFromHeaders(response: Response, retryAttempt: numbe
         }
     }
 
-    const rateLimitReset = response.headers.get("X-RateLimit-Reset");
+    // X-RateLimit-Reset times the rate-limit window, so it paces a 429 only.
+    const rateLimitReset = response.status === 429 ? response.headers.get("X-RateLimit-Reset") : null;
     if (rateLimitReset) {
         const resetTime = parseInt(rateLimitReset, 10);
         if (!Number.isNaN(resetTime)) {
@@ -49,9 +50,30 @@ export function getRetryDelayFromHeaders(response: Response, retryAttempt: numbe
     return Math.min(addSymmetricJitter(Math.min(INITIAL_RETRY_DELAY * 2 ** retryAttempt, MAX_RETRY_DELAY)), MAX_RETRY_DELAY);
 }
 
+// Waits between attempts. An abort ends the wait at once, rejecting with
+// the signal's reason, so it is not held until the backoff finishes.
+function waitUnlessAborted(delay: number, abortSignal?: AbortSignal): Promise<void> {
+    return new Promise((resolve, reject) => {
+        if (abortSignal?.aborted) {
+            reject(abortSignal.reason);
+            return;
+        }
+        const onAbort = () => {
+            clearTimeout(timer);
+            reject(abortSignal?.reason);
+        };
+        const timer = setTimeout(() => {
+            abortSignal?.removeEventListener("abort", onAbort);
+            resolve();
+        }, delay);
+        abortSignal?.addEventListener("abort", onAbort, { once: true });
+    });
+}
+
 export async function requestWithRetries(
     requestFn: () => Promise<Response>,
     maxRetries: number = DEFAULT_MAX_RETRIES,
+    abortSignal?: AbortSignal,
 ): Promise<Response> {
     let response: Response = await requestFn();
 
@@ -59,7 +81,7 @@ export async function requestWithRetries(
         if (isRetryableStatusCode(response.status)) {
             const delay = getRetryDelayFromHeaders(response, i);
 
-            await new Promise((resolve) => setTimeout(resolve, delay));
+            await waitUnlessAborted(delay, abortSignal);
             response = await requestFn();
         } else {
             break;

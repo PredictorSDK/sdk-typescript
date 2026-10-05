@@ -9,8 +9,8 @@ export const PaymentRequiredErrorBody: core.serialization.ObjectSchema<
     serializers.PaymentRequiredErrorBody.Raw,
     PredictorSDK.PaymentRequiredErrorBody
 > = core.serialization.object({
-    error: core.serialization.string(),
-    message: core.serialization.string().optional(),
+    code: core.serialization.string(),
+    message: core.serialization.string(),
     statusCode: core.serialization.property("status_code", core.serialization.number()),
     action: PaymentRequiredErrorAction,
     requiredTier: core.serialization.property("required_tier", core.serialization.string()),
@@ -27,8 +27,8 @@ export const PaymentRequiredErrorBody: core.serialization.ObjectSchema<
 
 export declare namespace PaymentRequiredErrorBody {
     export interface Raw {
-        error: string;
-        message?: string | null;
+        code: string;
+        message: string;
         status_code: number;
         action: PaymentRequiredErrorAction.Raw;
         required_tier: string;

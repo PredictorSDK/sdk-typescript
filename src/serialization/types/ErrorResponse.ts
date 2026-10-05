@@ -3,18 +3,23 @@
 import type * as PredictorSDK from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
+import { ErrorParamProblem } from "./ErrorParamProblem.js";
 
 export const ErrorResponse: core.serialization.ObjectSchema<serializers.ErrorResponse.Raw, PredictorSDK.ErrorResponse> =
     core.serialization.object({
-        error: core.serialization.string(),
-        message: core.serialization.string().optional(),
+        code: core.serialization.string(),
+        message: core.serialization.string(),
         statusCode: core.serialization.property("status_code", core.serialization.number()),
+        param: core.serialization.string().optional(),
+        errors: core.serialization.list(ErrorParamProblem).optional(),
     });
 
 export declare namespace ErrorResponse {
     export interface Raw {
-        error: string;
-        message?: string | null;
+        code: string;
+        message: string;
         status_code: number;
+        param?: string | null;
+        errors?: ErrorParamProblem.Raw[] | null;
     }
 }

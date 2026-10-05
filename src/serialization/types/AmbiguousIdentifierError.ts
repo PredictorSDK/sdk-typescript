@@ -8,16 +8,18 @@ export const AmbiguousIdentifierError: core.serialization.ObjectSchema<
     serializers.AmbiguousIdentifierError.Raw,
     PredictorSDK.AmbiguousIdentifierError
 > = core.serialization.object({
-    error: core.serialization.string(),
-    message: core.serialization.string().optional(),
+    code: core.serialization.string(),
+    message: core.serialization.string(),
+    param: core.serialization.string().optional(),
     candidates: core.serialization.list(core.serialization.string()),
     statusCode: core.serialization.property("status_code", core.serialization.number()),
 });
 
 export declare namespace AmbiguousIdentifierError {
     export interface Raw {
-        error: string;
-        message?: string | null;
+        code: string;
+        message: string;
+        param?: string | null;
         candidates: string[];
         status_code: number;
     }

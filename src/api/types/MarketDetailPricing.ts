@@ -11,7 +11,7 @@ export interface MarketDetailPricing {
     /**
      * How completely — and how honestly — the pricing tier hydrated. It answers two questions in this precedence order: did every outcome get a price, and is any of those prices backed by a book you could actually cross.
      *
-     * `live` — every outcome carries a price AND at least one outcome has a two-sided book the venue itself treats as quoted. **This is the only value that licenses reading `price` as a tradeable level.**
+     * `live` — the market is `open`, every outcome carries a price, AND at least one outcome has a two-sided book the venue itself treats as quoted. **This is the only value that licenses reading `price` as a tradeable level.** A `closed` or `settled` market is never `live`, whatever its record still quotes: it takes no orders.
      *
      * `indicative` — every outcome carries a price, but no outcome has such a book behind it. The prices are marks, one side of a book with nothing facing it, or a two-sided book wider than the venue's own published spread threshold for that market. Concretely: an AlphaArcade market whose order book is empty, where the catalog midpoint is the only price left standing; a Predict market quoted 0.01 / 0.99, whose 0.5 midpoint is arithmetic rather than a market (Predict publishes a per-market `spreadThreshold` and this server honours it); a settled Polymarket market whose 1/0 `outcomePrices` are resolution marks; or a book with one resting order and nothing on the other side. `price` is still populated and still the venue's own number — treat it as roughly where the market is thought to be, never as a level you can trade or arbitrage against. **Filter or flag `indicative` before computing cross-venue edges**: an `indicative` 0.5 next to a `live` 0.735 elsewhere is not a 23¢ opportunity, it is one venue with no book.
      *
@@ -24,7 +24,7 @@ export interface MarketDetailPricing {
     availability: PredictorSDK.MarketDetailPricingAvailability;
     /** Self-describing unit declaration for all price fields. Single canonical scale today; new values would be added alongside (never replacing) this one. */
     scale: PredictorSDK.MarketDetailPricingScale;
-    /** Where the quotes came from. `market_record` — embedded in the same single-market record as the identity fetch (Kalshi, Polymarket, Predict). `orderbook` — required one bounded second fetch against the platform's order-book surface (SX Bet `/orderbook-v3/snapshot`, Hyperliquid `l2Book`). */
+    /** Where the quotes came from. `market_record` — embedded in the same record as the identity fetch: Kalshi, Polymarket and Predict, and the group views of Limitless and Pred, which read no order book. `orderbook` — the platform's order book, in a bounded second fetch where it is a separate route: SX Bet (`/orderbook-v3/snapshot`), Hyperliquid (`l2Book`), AlphaArcade, Limitless, Pred and ProphetX. A failed book read keeps `orderbook` and reports `availability: unavailable` or the record's marks. */
     source: PredictorSDK.MarketDetailPricingSource;
     /**
      * The upstream timestamp on this platform's own clock, as RFC3339. When the two sides carry independent stamps this is the OLDER of them — a conservative floor that never over-claims freshness. Null when the record carries no timestamp at all (Predict, AlphaArcade, and SX Bet).

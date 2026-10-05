@@ -15,6 +15,6 @@ export interface GetBinanceCryptoPricesRequest {
     endTime?: number;
     /** Maximum number of prices to return. Defaults to 100 when a time range is present. Values above 100 are silently clamped to 100. Without a time range, this parameter is ignored — the endpoint always returns the single latest price. */
     limit?: number;
-    /** Base64-encoded cursor from a previous response to fetch the next page of results. */
+    /** Base64-encoded cursor from a previous response to fetch the next (older) page of results. It carries the `start_time` of the request that issued it, so the next page stays inside the range whether or not you send `start_time` again; sending a different `start_time` with it is a `400`. `end_time` is ignored when a cursor is sent. */
     paginationKey?: string;
 }

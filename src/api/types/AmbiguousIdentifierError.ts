@@ -6,10 +6,12 @@
  * `candidates` lists exactly the platforms the identifier resolved on, in a stable order, and every entry is a legal `?platform=` value. Retry the same identifier with `?platform={candidate}`, or with the composite `{platform}:{id}` form, and the lookup is deterministic. Clients that fan out over identifiers should handle 409 by re-issuing with the platform they already know from the listing that produced the id — every list and matching response that emits an identifier also emits its platform.
  */
 export interface AmbiguousIdentifierError {
-    /** Short machine-stable reason, e.g. `ambiguous market_id`. */
-    error: string;
+    /** Always `ambiguous_identifier`. */
+    code: string;
     /** Human-readable detail naming the identifier, the platforms it resolved on, and how to disambiguate. */
-    message?: string;
+    message: string;
+    /** The parameter holding the identifier, `market_id` or `event_id`. */
+    param?: string;
     /** The platforms this identifier resolved on. Each value is accepted verbatim by the `platform` query parameter. */
     candidates: string[];
     statusCode: number;
