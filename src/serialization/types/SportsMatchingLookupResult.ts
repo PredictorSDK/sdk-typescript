@@ -4,14 +4,14 @@ import type * as PredictorSDK from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 
-export const SportsMatchingLookup: core.serialization.ObjectSchema<
-    serializers.SportsMatchingLookup.Raw,
-    PredictorSDK.SportsMatchingLookup
+export const SportsMatchingLookupResult: core.serialization.ObjectSchema<
+    serializers.SportsMatchingLookupResult.Raw,
+    PredictorSDK.SportsMatchingLookupResult
 > = core.serialization.object({
     eventIds: core.serialization.property("event_ids", core.serialization.list(core.serialization.string())),
 });
 
-export declare namespace SportsMatchingLookup {
+export declare namespace SportsMatchingLookupResult {
     export interface Raw {
         event_ids: string[];
     }

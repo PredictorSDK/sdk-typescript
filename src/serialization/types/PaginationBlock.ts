@@ -9,7 +9,7 @@ export const PaginationBlock: core.serialization.ObjectSchema<
     PredictorSDK.PaginationBlock
 > = core.serialization.object({
     limit: core.serialization.number(),
-    total: core.serialization.number(),
+    total: core.serialization.number().nullable(),
     hasMore: core.serialization.property("has_more", core.serialization.boolean()),
     nextCursor: core.serialization.property("next_cursor", core.serialization.string().optional()),
 });
@@ -17,7 +17,7 @@ export const PaginationBlock: core.serialization.ObjectSchema<
 export declare namespace PaginationBlock {
     export interface Raw {
         limit: number;
-        total: number;
+        total?: number | null;
         has_more: boolean;
         next_cursor?: string | null;
     }

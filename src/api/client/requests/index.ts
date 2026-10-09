@@ -5,3 +5,4 @@ export type { GetMarketsRequest } from "./GetMarketsRequest.js";
 export type { GetPolymarketWalletRequest } from "./GetPolymarketWalletRequest.js";
 export type { GetSportsMatchingMarketsRequest } from "./GetSportsMatchingMarketsRequest.js";
 export type { ListPolymarketWalletPositionsRequest } from "./ListPolymarketWalletPositionsRequest.js";
+export type { LookupSportsMatchingMarketsRequest } from "./LookupSportsMatchingMarketsRequest.js";

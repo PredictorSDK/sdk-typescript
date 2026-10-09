@@ -4,20 +4,19 @@ import type * as PredictorSDK from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 import { CryptoPriceItem } from "./CryptoPriceItem.js";
+import { PaginationBlock } from "./PaginationBlock.js";
 
 export const CryptoPricesResponse: core.serialization.ObjectSchema<
     serializers.CryptoPricesResponse.Raw,
     PredictorSDK.CryptoPricesResponse
 > = core.serialization.object({
-    prices: core.serialization.list(CryptoPriceItem),
-    paginationKey: core.serialization.property("pagination_key", core.serialization.string().optional()),
-    total: core.serialization.number().optional(),
+    data: core.serialization.list(CryptoPriceItem),
+    pagination: PaginationBlock,
 });
 
 export declare namespace CryptoPricesResponse {
     export interface Raw {
-        prices: CryptoPriceItem.Raw[];
-        pagination_key?: string | null;
-        total?: number | null;
+        data: CryptoPriceItem.Raw[];
+        pagination: PaginationBlock.Raw;
     }
 }

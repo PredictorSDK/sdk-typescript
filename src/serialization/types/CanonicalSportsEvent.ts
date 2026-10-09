@@ -14,6 +14,8 @@ export const CanonicalSportsEvent: core.serialization.ObjectSchema<
     sport: core.serialization.string(),
     league: core.serialization.string(),
     title: core.serialization.string(),
+    scheduledStart: core.serialization.property("scheduled_start", core.serialization.date().nullable()),
+    scheduledDate: core.serialization.property("scheduled_date", core.serialization.string()),
     participants: core.serialization.list(CanonicalSportsParticipant),
     submarkets: core.serialization.list(CanonicalSportsSubmarket),
 });
@@ -24,6 +26,8 @@ export declare namespace CanonicalSportsEvent {
         sport: string;
         league: string;
         title: string;
+        scheduled_start?: string | null;
+        scheduled_date: string;
         participants: CanonicalSportsParticipant.Raw[];
         submarkets: CanonicalSportsSubmarket.Raw[];
     }

@@ -5,12 +5,12 @@ import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 import { EventFanout } from "./EventFanout.js";
 import { EventMarket } from "./EventMarket.js";
-import { EventResponsePlatform } from "./EventResponsePlatform.js";
+import { EventResponseProvider } from "./EventResponseProvider.js";
 
 export const EventResponse: core.serialization.ObjectSchema<serializers.EventResponse.Raw, PredictorSDK.EventResponse> =
     core.serialization.object({
         eventId: core.serialization.property("event_id", core.serialization.string()),
-        platform: EventResponsePlatform,
+        provider: EventResponseProvider,
         title: core.serialization.string(),
         markets: core.serialization.list(EventMarket),
         fanout: EventFanout.optional(),
@@ -19,7 +19,7 @@ export const EventResponse: core.serialization.ObjectSchema<serializers.EventRes
 export declare namespace EventResponse {
     export interface Raw {
         event_id: string;
-        platform: EventResponsePlatform.Raw;
+        provider: EventResponseProvider.Raw;
         title: string;
         markets: EventMarket.Raw[];
         fanout?: EventFanout.Raw | null;

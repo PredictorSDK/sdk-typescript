@@ -3,9 +3,8 @@
 import type * as PredictorSDK from "../index.js";
 
 export interface CryptoPricesResponse {
-    prices: PredictorSDK.CryptoPriceItem[];
-    /** Base64-encoded cursor for fetching the next page. Absent when there are no more results. */
-    paginationKey?: string;
-    /** Number of prices in this response page. Omitted on empty responses for unknown symbols. */
-    total?: number;
+    /** One page of prices, newest first, one per second. A single item when no time range was sent; `[]` for an unknown symbol. */
+    data: PredictorSDK.CryptoPriceItem[];
+    /** Pagination metadata for the current page. `total` is always `null` on this route, and `next_cursor` goes back as `cursor`. */
+    pagination: PredictorSDK.PaginationBlock;
 }

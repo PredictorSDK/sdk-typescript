@@ -7,14 +7,14 @@
  *     }
  */
 export interface GetBinanceCryptoPricesRequest {
-    /** Binance trading pair (e.g. `btcusdt`, `ethusdt`, `solusdt`). Must contain only alphanumeric characters (no hyphens, underscores, or other separators). Uppercase is accepted and automatically lowercased (e.g. `BTCUSDT` → `btcusdt`). Must be a valid Binance symbol; unknown symbols return `200` with an empty `prices` array. */
+    /** Binance trading pair (e.g. `btcusdt`, `ethusdt`, `solusdt`). Must contain only alphanumeric characters (no hyphens, underscores, or other separators). Uppercase is accepted and automatically lowercased (e.g. `BTCUSDT` → `btcusdt`). Must be a valid Binance symbol; unknown symbols return `200` with an empty `data` array. */
     currency: string;
     /** Start of the time range as a Unix timestamp in milliseconds (inclusive). Negative values are clamped to 0. */
     startTime?: number;
     /** End of the time range as a Unix timestamp in milliseconds (inclusive). Negative values are clamped to 0. */
     endTime?: number;
-    /** Maximum number of prices to return. Defaults to 100 when a time range is present. Values above 100 are silently clamped to 100. Without a time range, this parameter is ignored — the endpoint always returns the single latest price. */
+    /** Maximum number of prices per page, 1 to 100; a larger value is a `400` (it was silently clamped to 100 until 2026-10-09). Defaults to 100 when a time range is present. Without a time range, this parameter is still validated but otherwise ignored: the endpoint always returns the single latest price, and `pagination.limit` reports `1`. */
     limit?: number;
-    /** Base64-encoded cursor from a previous response to fetch the next (older) page of results. It carries the `start_time` of the request that issued it, so the next page stays inside the range whether or not you send `start_time` again; sending a different `start_time` with it is a `400`. `end_time` is ignored when a cursor is sent. */
-    paginationKey?: string;
+    /** The `pagination.next_cursor` of a previous response, sent unchanged, to fetch the next (older) page of results. It carries the `start_time` of the request that issued it, so the next page stays inside the range whether or not you send `start_time` again; sending a different `start_time` with it is a `400`. `end_time` is ignored when a cursor is sent. It was named `pagination_key` until 2026-10-09; that name now answers `400` naming this one. */
+    cursor?: string;
 }

@@ -10,6 +10,14 @@ export interface CanonicalSportsEvent {
     /** Canonical league slug. Cross-platform matching covers `nba`, `wnba`, `nhl`, `mlb`, and `nfl` today. The value is the first segment of `event_id`, so `nba-okc-sas-2026-10-20` is an NBA game. Treat this as an open set — leagues are added without a breaking change. */
     league: string;
     title: string;
+    /**
+     * When the game starts, in UTC at millisecond precision, when a venue published an exact start time for it; `null` otherwise. Venues often publish only the game's date (Kalshi's tickers carry a date and no time), and a venue's "time to be announced" placeholder is not a start, so a game whose venues say nothing more is `null` here and `scheduled_date` still names its day. Games matched before start times were recorded read `null` too, including archived games for up to 30 days after that change. `null` means "no exact start is known", never a guess at one.
+     *
+     * This is schedule identity, not a status: it does not say whether the game has started, ended or been postponed. When venues disagree about the start, the earliest exact one is published. A postponed game takes its new start when the venues publish it.
+     */
+    scheduledStart: Date | null;
+    /** The game's calendar day in America/New_York, as `YYYY-MM-DD`. Always present, even when `scheduled_start` is `null`. It is the day the game's start falls on in Eastern time, and never earlier than the day the `event_id` ends in, which is how a game whose start is unknown is still dated. A game that starts at 8:30 PM Eastern on the 20th is on the 20th, although its `scheduled_start` is on the 21st in UTC. It is the value the `scheduled_date` filter on `GET /v1/matching-markets/sports` matches, and the day the default list retires the game by. */
+    scheduledDate: string;
     participants: PredictorSDK.CanonicalSportsParticipant[];
     submarkets: PredictorSDK.CanonicalSportsSubmarket[];
 }

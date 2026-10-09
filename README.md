@@ -17,6 +17,8 @@ const client = new PredictorSDKClient({ token: "your-api-key" });
 
 const plans = await client.getPlans();
 const categories = await client.getCategories();
+// Paginated calls resolve to a page: `markets.data` is the first page, and
+// `for await (const market of markets)` walks every page.
 const markets = await client.getMarkets({ limit: 10, category: "sports" });
 
 console.log(plans.data, categories.data, markets.data);

@@ -4,9 +4,9 @@ import type * as PredictorSDK from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 
-export const GetMarketRequestPlatform: core.serialization.Schema<
-    serializers.GetMarketRequestPlatform.Raw,
-    PredictorSDK.GetMarketRequestPlatform
+export const GetEventRequestProvider: core.serialization.Schema<
+    serializers.GetEventRequestProvider.Raw,
+    PredictorSDK.GetEventRequestProvider
 > = core.serialization.enum_([
     "kalshi",
     "polymarket",
@@ -19,7 +19,7 @@ export const GetMarketRequestPlatform: core.serialization.Schema<
     "pred",
 ]);
 
-export declare namespace GetMarketRequestPlatform {
+export declare namespace GetEventRequestProvider {
     export type Raw =
         | "kalshi"
         | "polymarket"

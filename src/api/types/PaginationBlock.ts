@@ -3,8 +3,8 @@
 export interface PaginationBlock {
     /** Page size this page was served with. It echoes the first-page `limit` query value; for cursor-native passthrough endpoints, a supplied cursor's page size takes precedence on later pages. */
     limit: number;
-    /** Total matching items across all pages, when known. Set to `0` for endpoints whose upstream does not expose a total count — clients should rely on `has_more` and `next_cursor` to paginate in that case. */
-    total: number;
+    /** Total matching items across all pages, when the route can count them. `null` when it cannot: `GET /v1/polymarket/wallet/positions` and `GET /v1/crypto-prices/binance` read upstreams that give no count, and neither route walks a result to find one. `0` therefore only ever means an empty result. Rely on `has_more` and `next_cursor` to paginate, whatever `total` says. */
+    total: number | null;
     /** Whether additional pages exist beyond this one. */
     hasMore: boolean;
     /** Opaque cursor for fetching the next page. Pass back via the `cursor` query parameter. Omitted when `has_more` is `false`. Clients must preserve the same filter set when re-using a cursor — mismatches return `400`. */

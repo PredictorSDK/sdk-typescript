@@ -20,7 +20,7 @@ export interface GetMarketsRequest {
      *
      * `pagination.total` counts only the selected provider's rows, and cursors are bound to the filter that created them: replay a `next_cursor` with the same `provider` value, or start again from the first page.
      *
-     * This is a catalog membership filter, and it is spelled `provider` because that is the field it selects on. It is unrelated to the `platform` override on `GET /v1/markets/{market_id}` and `GET /v1/events/{event_id}`, which names the venue an identifier should be resolved against rather than filtering a list.
+     * This is a catalog membership filter, and it is spelled `provider` because that is the field it selects on. The same name is the override on `GET /v1/markets/{market_id}` and `GET /v1/events/{event_id}`, where it names the provider an identifier should be resolved against rather than filtering a list.
      */
     provider?: PredictorSDK.GetMarketsRequestProvider;
 }

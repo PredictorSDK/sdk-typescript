@@ -4,25 +4,22 @@ import type * as PredictorSDK from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 import { CanonicalSportsEvent } from "./CanonicalSportsEvent.js";
-import { PaginationBlock } from "./PaginationBlock.js";
-import { SportsMatchingLookup } from "./SportsMatchingLookup.js";
+import { SportsMatchingLookupResult } from "./SportsMatchingLookupResult.js";
 import { SportsMatchingSnapshot } from "./SportsMatchingSnapshot.js";
 
-export const SportsMatchingResponse: core.serialization.ObjectSchema<
-    serializers.SportsMatchingResponse.Raw,
-    PredictorSDK.SportsMatchingResponse
+export const SportsMatchingLookupResponse: core.serialization.ObjectSchema<
+    serializers.SportsMatchingLookupResponse.Raw,
+    PredictorSDK.SportsMatchingLookupResponse
 > = core.serialization.object({
     data: core.serialization.list(CanonicalSportsEvent),
-    lookups: core.serialization.record(core.serialization.string(), SportsMatchingLookup).optional(),
-    pagination: PaginationBlock.optional(),
+    lookups: core.serialization.record(core.serialization.string(), SportsMatchingLookupResult),
     snapshot: SportsMatchingSnapshot,
 });
 
-export declare namespace SportsMatchingResponse {
+export declare namespace SportsMatchingLookupResponse {
     export interface Raw {
         data: CanonicalSportsEvent.Raw[];
-        lookups?: Record<string, SportsMatchingLookup.Raw> | null;
-        pagination?: PaginationBlock.Raw | null;
+        lookups: Record<string, SportsMatchingLookupResult.Raw>;
         snapshot: SportsMatchingSnapshot.Raw;
     }
 }

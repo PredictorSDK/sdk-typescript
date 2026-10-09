@@ -3,14 +3,14 @@
 import type * as PredictorSDK from "../index.js";
 
 export interface EventResponse {
-    /** Echo of the platform-native event identifier supplied in the request path. */
+    /** Echo of the provider-native event identifier supplied in the request path. */
     eventId: string;
-    /** The platform the event_id was resolved against, either inferred from the ID format or supplied via `?platform=`. */
-    platform: PredictorSDK.EventResponsePlatform;
-    /** Human-readable event title from the platform. */
+    /** The provider the event_id was resolved against, either inferred from the ID format or supplied via `?provider=`. It is the value to send as `?provider=` to `GET /v1/markets/{market_id}` with a nested market's `market_id` (it was named `platform` until 2026-10-09). */
+    provider: PredictorSDK.EventResponseProvider;
+    /** Human-readable event title from the provider. */
     title: string;
-    /** Markets nested under this event. Order is platform-native for the primary event, followed by markets from fanout siblings (Kalshi sports) in registry order. */
+    /** Markets nested under this event. Order is provider-native for the primary event, followed by markets from fanout siblings (Kalshi sports) in registry order. */
     markets: PredictorSDK.EventMarket[];
-    /** Present when the response was assembled from multiple upstream events (Kalshi sports sibling fanout). Lists which sibling event tickers were attempted, which contributed markets, and which failed or didn't exist. Absent for non-Kalshi platforms and for Kalshi events whose series is not in the sibling registry. */
+    /** Present when the response was assembled from multiple upstream events (Kalshi sports sibling fanout). Lists which sibling event tickers were attempted, which contributed markets, and which failed or didn't exist. Absent for non-Kalshi providers and for Kalshi events whose series is not in the sibling registry. */
     fanout?: PredictorSDK.EventFanout;
 }
