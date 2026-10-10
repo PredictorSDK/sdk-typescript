@@ -3,19 +3,23 @@
 import type * as PredictorSDK from "../index.js";
 
 export interface CanonicalSportsSubmarket {
-    /** Player props only. `equivalent` requires a complete reviewed profile for every source contract; `different` means at least one known payout-rule difference, even if other rules are unknown; `unverified` means equivalence has not been established and no known difference was found. Absence on game lines makes no claim about their full settlement equivalence. */
+    /** Whether the venues in this submarket settle it the same way, across the rules in `rule_comparisons`. Always present on moneyline, spread, total, team total and player prop submarkets, whether or not `include_rules` asked for the rows behind it. `equivalent` means every rule is known for every venue and agrees; `different` means at least one known difference, even if other rules are unknown; `unverified` means no difference was found but a rule is unknown for at least one venue, so equivalence has not been established. A player prop is `equivalent` only with a complete reviewed profile for every source contract. A game line is compared on three rules, `tie`, `overtime` and `push`, and the comparison never changes which venues are paired: it is the evidence a consumer needs to decide whether a pairing is a hedge. In practice a game line differs on a tie only in a league that can end a game level, which today is the NFL (about 0.3% of games). */
     settlementEquivalence?: PredictorSDK.CanonicalSportsSubmarketSettlementEquivalence;
-    /** Player props only. A deterministic matrix covering all nine settlement dimensions. Filter rows with `comparison=different` for known differences and `comparison=unverified` for gaps. Row-level agreement is not a complete contract review. Source values reference individual native market IDs, not venue-wide defaults. Evidence describes captured source clauses; additional unreviewed terms can apply. No prices or payout estimates. */
+    /** The rule matrix behind `settlement_equivalence`: one row per rule, each listing every source market's value. A moneyline, spread, total or team total carries three rows, `tie`, `overtime` and `push`, only when the request sent `include_rules=true`; without it they are omitted and the verdict stands alone. A player prop always carries its nine. Filter rows with `comparison=different` for known differences and `comparison=unverified` for gaps. Row-level agreement is not a complete contract review. Source values reference individual native market IDs, not venue-wide defaults. Evidence describes captured source clauses; additional unreviewed terms can apply. No prices or payout estimates. */
     ruleComparisons?: PredictorSDK.PlayerPropRuleComparison[];
-    /** Stable canonical submarket key within the event. */
+    /** Stable canonical submarket key within the event. A second-half or fourth-quarter spread, total or team total whose venues' own rules count overtime ends its detail with `:incl_ot` (`spread|half:2|spread:jax:incl_ot|2.5`); the same line on a venue whose rules exclude overtime has the key without the token, so the two are never one submarket. A team total's key names its team and states its overtime rule the way a game total's does (`team_total|full|team_total:phi:incl_ot|24.5`), so two teams' lines never share a key. */
     key: string;
+    /** What the submarket is: `moneyline`, `spread`, `total` (the game's total points), `team_total` (one team's own points, such as the Eagles over 24.5; its `subject` is the team), or `player_prop`. Not an enum: a value a client does not know yet is a new kind of market, never a different shape of an old one, and a client reads it as text. A team total is matched for the NFL, on Kalshi and Polymarket. */
     marketType: string;
+    /** `full`, `half:1`, `half:2`, or `quarter:1` to `quarter:4`. A half or quarter means regulation play, except a second half or fourth quarter whose venues count overtime, which says so in `rules.settlement` (`incl_ot`), in its `key` and in its `display_name`. */
     segment: string;
+    /** Human-readable label. A second-half or fourth-quarter line that counts overtime ends with ` (incl. OT)`, because a bare `2H` reads as regulation play. A team total names its team: `Philadelphia Eagles Total 24.5`, `1H Philadelphia Eagles Total 13.5`. */
     displayName: string;
+    /** What the submarket measures: `winner`, `spread`, `total`, a player prop's statistic, or, for a team total, the team's own score in its sport's unit (`points` for the NFL). */
     metric: string;
-    /** Unsigned threshold for totals and player props; signed handicap for spreads. Omitted for moneyline markets. */
+    /** Unsigned threshold for totals, team totals and player props; signed handicap for spreads. Omitted for moneyline markets. */
     line?: number;
-    /** Participant or player whose line is represented. Present for subject-owned markets such as spreads and player props; omitted for event-owned moneylines and totals. */
+    /** Participant or player whose line is represented. Present for subject-owned markets such as spreads, team totals and player props; omitted for event-owned moneylines and totals. */
     subject?: PredictorSDK.CanonicalSportsSubject;
     rules?: PredictorSDK.CanonicalSportsRules;
     outcomes: PredictorSDK.CanonicalSportsOutcome[];

@@ -17,6 +17,8 @@ export const PlayerPropRuleComparisonRule: core.serialization.Schema<
     "cancellation",
     "interruption",
     "resolution_source",
+    "tie",
+    "push",
 ]);
 
 export declare namespace PlayerPropRuleComparisonRule {
@@ -29,5 +31,7 @@ export declare namespace PlayerPropRuleComparisonRule {
         | "postponement"
         | "cancellation"
         | "interruption"
-        | "resolution_source";
+        | "resolution_source"
+        | "tie"
+        | "push";
 }

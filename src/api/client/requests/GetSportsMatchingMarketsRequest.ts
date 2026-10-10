@@ -43,4 +43,6 @@ export interface GetSportsMatchingMarketsRequest {
      * Such pages are large: on 2026-10-04 a 50-event page with every submarket was about 880 KB (190 KB gzipped), and a 20-event `player_prop_match=same_prop` page about 3 MB. Send `Accept-Encoding: gzip` and a smaller `limit` when you need them.
      */
     includeSubmarkets?: boolean;
+    /** When `true`, every moneyline, spread and total also lists `rule_comparisons`: the three rows (`tie`, `overtime` and `push`), each with every source market's value, a description and an evidence link, that sit behind its `settlement_equivalence`. When `false`, the default, a game line carries `settlement_equivalence` alone: the verdict is always there and only the rows are left out. The rows are about 60% of an event's bytes on a busy football slate, so ask for them when you want the evidence. A player prop always carries its own matrix, whatever this is. The flag changes what each event lists and never which events a page returns, so a `cursor` works with either value. */
+    includeRules?: boolean;
 }

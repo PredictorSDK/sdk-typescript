@@ -8,6 +8,7 @@ export const CanonicalSportsSourceMarketProvider = {
     AlphaArcade: "alpha-arcade",
     Prophetx: "prophetx",
     Pred: "pred",
+    Limitless: "limitless",
 } as const;
 export type CanonicalSportsSourceMarketProvider =
     (typeof CanonicalSportsSourceMarketProvider)[keyof typeof CanonicalSportsSourceMarketProvider];
