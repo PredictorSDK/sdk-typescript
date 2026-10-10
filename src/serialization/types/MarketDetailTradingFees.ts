@@ -19,7 +19,7 @@ export const MarketDetailTradingFees: core.serialization.ObjectSchema<
     chargeBasis: core.serialization.property("charge_basis", MarketDetailTradingFeesChargeBasis.nullable()),
     taker: MarketDetailFeeLeg.nullable(),
     maker: MarketDetailFeeLeg.nullable(),
-    scheduledChange: core.serialization.property("scheduled_change", MarketDetailScheduledFeeChange.optionalNullable()),
+    scheduledChange: core.serialization.property("scheduled_change", MarketDetailScheduledFeeChange.optional()),
 });
 
 export declare namespace MarketDetailTradingFees {
@@ -30,6 +30,6 @@ export declare namespace MarketDetailTradingFees {
         charge_basis?: MarketDetailTradingFeesChargeBasis.Raw | null;
         taker?: MarketDetailFeeLeg.Raw | null;
         maker?: MarketDetailFeeLeg.Raw | null;
-        scheduled_change?: (MarketDetailScheduledFeeChange.Raw | null | undefined) | null;
+        scheduled_change?: MarketDetailScheduledFeeChange.Raw | null;
     }
 }

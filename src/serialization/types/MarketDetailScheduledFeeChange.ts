@@ -10,14 +10,14 @@ export const MarketDetailScheduledFeeChange: core.serialization.ObjectSchema<
     PredictorSDK.MarketDetailScheduledFeeChange
 > = core.serialization.object({
     effectiveAt: core.serialization.property("effective_at", core.serialization.date()),
-    taker: MarketDetailFeeLeg.nullable(),
-    maker: MarketDetailFeeLeg.nullable(),
+    taker: MarketDetailFeeLeg,
+    maker: MarketDetailFeeLeg,
 });
 
 export declare namespace MarketDetailScheduledFeeChange {
     export interface Raw {
         effective_at: string;
-        taker?: MarketDetailFeeLeg.Raw | null;
-        maker?: MarketDetailFeeLeg.Raw | null;
+        taker: MarketDetailFeeLeg.Raw;
+        maker: MarketDetailFeeLeg.Raw;
     }
 }

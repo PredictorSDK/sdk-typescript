@@ -70,22 +70,72 @@ function waitUnlessAborted(delay: number, abortSignal?: AbortSignal): Promise<vo
     });
 }
 
+// Error codes that mean the connection failed before any response arrived:
+// the server refused it, reset it, or closed it. Node's fetch (undici),
+// node-fetch and Bun report them on the thrown error or its `cause`.
+const CONNECTION_FAILURE_CODES = new Set([
+    "ECONNREFUSED",
+    "ECONNRESET",
+    "ECONNABORTED",
+    "EPIPE",
+    "UND_ERR_SOCKET",
+    "ConnectionRefused",
+    "ConnectionClosed",
+]);
+
+// Whether `error`, thrown for a request that got no response, is a
+// connection that failed (see above). A timeout, an abort and any other error
+// are not retried: a caller who aborted or timed out asked to stop, and
+// waiting does not change the answer to the rest.
+function isConnectionFailure(error: unknown, abortSignal?: AbortSignal): boolean {
+    if (abortSignal?.aborted) {
+        return false;
+    }
+    let current: unknown = error;
+    for (let depth = 0; depth < 5 && current instanceof Error; ++depth) {
+        if (current.name === "AbortError" || current.name === "TimeoutError") {
+            return false;
+        }
+        const code = (current as { code?: unknown }).code;
+        if (typeof code === "string" && CONNECTION_FAILURE_CODES.has(code)) {
+            return true;
+        }
+        current = (current as { cause?: unknown }).cause;
+    }
+    return false;
+}
+
+function getBackoffDelay(retryAttempt: number): number {
+    return Math.min(addSymmetricJitter(Math.min(INITIAL_RETRY_DELAY * 2 ** retryAttempt, MAX_RETRY_DELAY)), MAX_RETRY_DELAY);
+}
+
 export async function requestWithRetries(
     requestFn: () => Promise<Response>,
     maxRetries: number = DEFAULT_MAX_RETRIES,
     abortSignal?: AbortSignal,
 ): Promise<Response> {
-    let response: Response = await requestFn();
+    const retries = maxRetries > 0 ? maxRetries : 0;
+    let response: Response | undefined;
 
-    for (let i = 0; i < maxRetries; ++i) {
-        if (isRetryableStatusCode(response.status)) {
-            const delay = getRetryDelayFromHeaders(response, i);
-
-            await waitUnlessAborted(delay, abortSignal);
+    for (let i = 0; i <= retries; ++i) {
+        try {
             response = await requestFn();
-        } else {
-            break;
+        } catch (error) {
+            // No response arrived. A connection that failed before one is retried
+            // like a retryable status, with the same backoff and cap; any other
+            // error is thrown at once.
+            if (i < retries && isConnectionFailure(error, abortSignal)) {
+                await waitUnlessAborted(getBackoffDelay(i), abortSignal);
+                continue;
+            }
+            throw error;
         }
+
+        if (i < retries && isRetryableStatusCode(response.status)) {
+            await waitUnlessAborted(getRetryDelayFromHeaders(response, i), abortSignal);
+            continue;
+        }
+        break;
     }
     return response!;
 }

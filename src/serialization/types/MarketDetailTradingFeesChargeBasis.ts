@@ -7,8 +7,8 @@ import type * as serializers from "../index.js";
 export const MarketDetailTradingFeesChargeBasis: core.serialization.Schema<
     serializers.MarketDetailTradingFeesChargeBasis.Raw,
     PredictorSDK.MarketDetailTradingFeesChargeBasis
-> = core.serialization.enum_(["fill", "settlement_profit"]);
+> = core.serialization.enum_(["fill", "settlement_profit", "close_or_settlement"]);
 
 export declare namespace MarketDetailTradingFeesChargeBasis {
-    export type Raw = "fill" | "settlement_profit";
+    export type Raw = "fill" | "settlement_profit" | "close_or_settlement";
 }

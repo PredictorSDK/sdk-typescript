@@ -3,7 +3,7 @@
 import type * as PredictorSDK from "../index.js";
 
 /**
- * One side's fee model. Both `taker` and `maker` are always returned and you pick: PredictorSDK does not infer which side you will be, since that needs an order it has not seen. Null when the model is not determinable for that side.
+ * One side's fee model. Both `taker` and `maker` are always returned and you pick: PredictorSDK does not infer which side you will be, since that needs an order it has not seen. The leg itself is `null` on `trading_fees` when the model cannot be stated for that side (see `taker` and `maker` there for when), and never null on a `scheduled_change`.
  *
  * Note that "maker" and "taker" mean the venue's own definition — the resting order is the maker, the incoming order that fills it is the taker.
  */
