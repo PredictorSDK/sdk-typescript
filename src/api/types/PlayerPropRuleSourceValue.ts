@@ -8,10 +8,10 @@ export interface PlayerPropRuleSourceValue {
     provider: string;
     /** Exact native market ID matching a source_markets entry. */
     marketId: string;
-    /** Machine-readable observed rule value, or `unknown`. Values are extensible; clients must tolerate unfamiliar values and read description. Never interpret unknown as no restriction. Game lines use `tie`: `half_payout` (each side is paid half), `void` (stakes returned), `loses` (the named result loses), `separate_outcome` (the venue lists a tie contract of its own), `not_possible` (the contract cannot end level: a league that plays on until one side wins, or a half-point line); `overtime`: `included` or `excluded`; and `push`: `void`, `loses` or `not_applicable` (a moneyline or a half-point line has nothing to land on). Each is `unknown` where the venue's rules do not say. */
+    /** Machine-readable observed rule value, or `unknown`. Values are extensible; clients must tolerate unfamiliar values and read description. Never interpret unknown as no restriction. Game lines use `tie`: `half_payout` (each side is paid half), `void` (stakes returned), `loses` (the named result loses), `separate_outcome` (the venue lists a tie contract of its own), `not_possible` (the contract cannot end level: a league that plays on until one side wins, or a half-point line); `overtime`: `included`, `excluded` or `not_applicable` (overtime cannot change the result: a tied NHL game is decided by exactly one goal, so a puck line of more than one goal settles the same either way); and `push`: `void`, `loses` or `not_applicable` (a moneyline or a half-point line has nothing to land on). Each is `unknown` where the venue's rules do not say. */
     value: string;
     /** Plain-language meaning, including relevant qualifications. */
     description: string;
-    /** Source contract containing the observed clause; omitted for unknown rules. For a game line it is the venue's published rules document (a Kalshi contract-terms PDF, SX Bet's help center, a ProphetX CFTC filing) or the record holding the market's own rules text. */
+    /** Source contract containing the observed clause; omitted for unknown rules. For a game line it is the venue's published rules document (a Kalshi contract-terms PDF, SX Bet's help center, a ProphetX CFTC filing), the record holding the market's own rules text, or, where a venue writes no rule, the venue's record of a game it settled under it (the description says so). */
     evidenceUrl?: string;
 }

@@ -16,6 +16,7 @@ export const CanonicalSportsSourceMarketProvider: core.serialization.Schema<
     "prophetx",
     "pred",
     "limitless",
+    "hyperliquid",
 ]);
 
 export declare namespace CanonicalSportsSourceMarketProvider {
@@ -27,5 +28,6 @@ export declare namespace CanonicalSportsSourceMarketProvider {
         | "alpha-arcade"
         | "prophetx"
         | "pred"
-        | "limitless";
+        | "limitless"
+        | "hyperliquid";
 }
