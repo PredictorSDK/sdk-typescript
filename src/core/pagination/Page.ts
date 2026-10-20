@@ -39,8 +39,12 @@ export class Page<T, R = unknown> implements AsyncIterable<T> {
     /**
      * Retrieves the next page
      * @returns this
+     * @throws Error when this is the last page; check hasNextPage() first
      */
     public async getNextPage(): Promise<this> {
+        if (!this.hasNextPage()) {
+            throw new Error("No pages remain: this is the last page. Check hasNextPage() before calling getNextPage().");
+        }
         const { data, rawResponse } = await this.loadNextPage(this.response).withRawResponse();
         this.response = data;
         this.rawResponse = rawResponse;
