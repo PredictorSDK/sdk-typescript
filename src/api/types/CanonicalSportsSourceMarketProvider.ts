@@ -10,6 +10,7 @@ export const CanonicalSportsSourceMarketProvider = {
     Pred: "pred",
     Limitless: "limitless",
     Hyperliquid: "hyperliquid",
+    PolymarketUs: "polymarket-us",
 } as const;
 export type CanonicalSportsSourceMarketProvider =
     (typeof CanonicalSportsSourceMarketProvider)[keyof typeof CanonicalSportsSourceMarketProvider];

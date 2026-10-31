@@ -17,6 +17,7 @@ export const GetMarketRequestProvider: core.serialization.Schema<
     "prophetx",
     "limitless",
     "pred",
+    "polymarket-us",
 ]);
 
 export declare namespace GetMarketRequestProvider {
@@ -29,5 +30,6 @@ export declare namespace GetMarketRequestProvider {
         | "alpha-arcade"
         | "prophetx"
         | "limitless"
-        | "pred";
+        | "pred"
+        | "polymarket-us";
 }

@@ -17,6 +17,7 @@ export const EventResponseProvider: core.serialization.Schema<
     "prophetx",
     "limitless",
     "pred",
+    "polymarket-us",
 ]);
 
 export declare namespace EventResponseProvider {
@@ -29,5 +30,6 @@ export declare namespace EventResponseProvider {
         | "alpha-arcade"
         | "prophetx"
         | "limitless"
-        | "pred";
+        | "pred"
+        | "polymarket-us";
 }

@@ -10,5 +10,6 @@ export const GetMarketsRequestProvider = {
     Prophetx: "prophetx",
     Limitless: "limitless",
     Pred: "pred",
+    PolymarketUs: "polymarket-us",
 } as const;
 export type GetMarketsRequestProvider = (typeof GetMarketsRequestProvider)[keyof typeof GetMarketsRequestProvider];

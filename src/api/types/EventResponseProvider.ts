@@ -11,5 +11,6 @@ export const EventResponseProvider = {
     Prophetx: "prophetx",
     Limitless: "limitless",
     Pred: "pred",
+    PolymarketUs: "polymarket-us",
 } as const;
 export type EventResponseProvider = (typeof EventResponseProvider)[keyof typeof EventResponseProvider];
